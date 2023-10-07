@@ -1,0 +1,114 @@
+homeassistant: true
+mqtt:
+  server: mqtt://core-mosquitto:1883
+  user: mqttha
+  password: mqttha
+serial:
+  port: /dev/ttyUSB0
+  adapter: auto
+  baudrate: 115200
+frontend:
+  port: 8099
+devices:
+  '0x54ef441000327c75':
+    friendly_name: Masterskaya_Svet
+  '0x54ef4410003af7d9':
+    friendly_name: Balkon_switch
+  '0x54ef441000402a3a':
+    friendly_name: Gostinaya_switch
+  '0x54ef441000401a57':
+    friendly_name: Masteskaya_switch
+  '0x54ef4410003ff922':
+    friendly_name: Kuhnya_swich
+  '0x54ef44100039a10d':
+    friendly_name: Toilet_switch
+  '0x54ef441000401a59':
+    friendly_name: Koridor_switch
+  '0x54ef441000400d4c':
+    friendly_name: Vanna_switch
+  '0x54ef441000400d0b':
+    friendly_name: Spalnya_switch
+  '0xa4c13869d6a6d37b':
+    friendly_name: Masterskaya_vent_Rele
+  '0x9035eafffeba9040':
+    friendly_name: ElektroSchetchik
+  '0xa4c138c4b02159f7':
+    friendly_name: Vanna_Teply_Pol
+  '0x003c84fffef96b56':
+    friendly_name: Kuhnya_Battery
+  '0x003c84fffef972dc':
+    friendly_name: Gost_Battery
+  '0x040d84fffe5f5eb9':
+    friendly_name: Spalnya_Battery
+  '0xa4c13801bf778bad':
+    friendly_name: Balkon_Teply_pol
+  '0x54ef4410004561f6':
+    friendly_name: Kuhnya_knopka
+  '0x54ef4410004561d7':
+    friendly_name: Spalnya_knopka
+  '0x00158d0007edc30f':
+    friendly_name: Toilet_DV
+  '0x00158d0007edb299':
+    friendly_name: Koridor_DV
+  '0xa4c138adc1263880':
+    friendly_name: Toilet_Teply_pol
+  '0x003c84fffe642f25':
+    friendly_name: Spalnya_Shtory
+    invert_cover: true
+  '0x00158d0008ceabed':
+    friendly_name: Gost_temp
+  '0x00158d0008cec465':
+    friendly_name: Spalnya_Temp
+  '0x003c84fffe643274':
+    friendly_name: Gost_Shtory
+    invert_cover: true
+  '0x943469fffe4eaba9':
+    friendly_name: Gost_Balkon_Shtora
+    invert_cover: true
+  '0x54ef44100042c3d3':
+    friendly_name: Kuhnya_kopka_2
+  '0x54ef44100042b66c':
+    friendly_name: Gost_knopka
+  '0xa4c1388822e84c91':
+    friendly_name: Vanna_sensor
+  '0xa4c13865fd227991':
+    friendly_name: Kuhnya_Led
+  '0x00124b0027aebf55':
+    friendly_name: Toilet_water
+  '0x00124b0027aebf45':
+    friendly_name: Vanna_water
+  '0xa4c13813ea3060c0':
+    friendly_name: Spalnya_Led
+  '0xa4c1385c9cd86d6f':
+    friendly_name: Stiralka_door
+  '0xa4c138c2529a49cd':
+    friendly_name: Stiralka_Water_Sensor
+  '0xa4c1386a94bd669d':
+    friendly_name: Kuhnya_Water_Sensor
+  '0xa4c138cf47de8f0a':
+    friendly_name: Vanna_DV
+  '0xa4c1382eac671c0f':
+    friendly_name: Koridor_Circl_Led
+  '0xa4c138b20582d5f3':
+    friendly_name: Koridor_Strip_Led
+permit_join: true
+availability:
+  active:
+    timeout: 10
+  passive:
+    timeout: 1500
+advanced:
+  log_syslog:
+    app_name: Zigbee2MQTT
+    eol: /n
+    host: localhost
+    localhost: localhost
+    path: /dev/log
+    pid: process.pid
+    port: 123
+    protocol: tcp4
+    type: '5424'
+  last_seen: ISO_8601
+external_converters:
+  - X5H.js
+  - ptvo_counter_2ch.js

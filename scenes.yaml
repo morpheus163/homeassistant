@@ -1,0 +1,625 @@
+- id: '1668032506505'
+  name: ALL_SVET_OFF
+  entities:
+    switch.koridor_switch_left:
+      action:
+      device_temperature: 30
+      flip_indicator_light: 'ON'
+      last_seen: '2023-08-30T09:25:00.209Z'
+      linkquality: 131
+      operation_mode_left: decoupled
+      operation_mode_right:
+      power_outage_count: 7
+      power_outage_memory:
+      state_left: 'ON'
+      state_right: 'OFF'
+      update:
+        installed_version: -1
+        latest_version: -1
+        state: idle
+      update_available: false
+      friendly_name: Koridor_switch_left
+      state: 'on'
+    switch.koridor_switch_right:
+      action:
+      device_temperature: 30
+      flip_indicator_light: 'ON'
+      last_seen: '2023-08-30T09:25:00.209Z'
+      linkquality: 131
+      operation_mode_left: decoupled
+      operation_mode_right:
+      power_outage_count: 7
+      power_outage_memory:
+      state_left: 'ON'
+      state_right: 'OFF'
+      update:
+        installed_version: -1
+        latest_version: -1
+        state: idle
+      update_available: false
+      friendly_name: Koridor_switch_right
+      state: 'off'
+    switch.kuhnya_swich_left:
+      action:
+      device_temperature: 30
+      flip_indicator_light: 'ON'
+      last_seen: '2023-08-30T09:30:48.848Z'
+      linkquality: 178
+      operation_mode_left:
+      operation_mode_right:
+      power_outage_count: 13
+      power_outage_memory:
+      state_left: 'OFF'
+      state_right: 'OFF'
+      update:
+        installed_version: 25
+        latest_version: 25
+        state: idle
+      update_available: false
+      friendly_name: Kuhnya_swich_left
+      state: 'off'
+    switch.kuhnya_swich_right:
+      action:
+      device_temperature: 30
+      flip_indicator_light: 'ON'
+      last_seen: '2023-08-30T09:30:48.848Z'
+      linkquality: 178
+      operation_mode_left:
+      operation_mode_right:
+      power_outage_count: 13
+      power_outage_memory:
+      state_left: 'OFF'
+      state_right: 'OFF'
+      update:
+        installed_version: 25
+        latest_version: 25
+        state: idle
+      update_available: false
+      friendly_name: Kuhnya_swich_right
+      state: 'off'
+    switch.masteskaya_switch_left:
+      action:
+      device_temperature: 29
+      flip_indicator_light: 'ON'
+      last_seen: '2023-08-30T09:27:43.141Z'
+      linkquality: 127
+      operation_mode_left:
+      operation_mode_right:
+      power_outage_count: 7
+      power_outage_memory: false
+      state_left: 'OFF'
+      state_right: 'OFF'
+      update:
+        installed_version: 25
+        latest_version: 25
+        state: idle
+      update_available: false
+      friendly_name: Masteskaya_switch_left
+      state: 'off'
+    switch.masteskaya_switch_right:
+      action:
+      device_temperature: 29
+      flip_indicator_light: 'ON'
+      last_seen: '2023-08-30T09:27:43.141Z'
+      linkquality: 127
+      operation_mode_left:
+      operation_mode_right:
+      power_outage_count: 7
+      power_outage_memory: false
+      state_left: 'OFF'
+      state_right: 'OFF'
+      update:
+        installed_version: 25
+        latest_version: 25
+        state: idle
+      update_available: false
+      friendly_name: Masteskaya_switch_right
+      state: 'off'
+    switch.spalnya_switch_left:
+      action:
+      device_temperature: 29
+      flip_indicator_light: 'ON'
+      last_seen: '2023-08-30T09:31:11.385Z'
+      linkquality: 109
+      operation_mode_left:
+      operation_mode_right:
+      power_outage_count: 9
+      power_outage_memory:
+      state_left: 'OFF'
+      state_right: 'OFF'
+      update:
+        installed_version: 25
+        latest_version: 25
+        state: idle
+      update_available: false
+      friendly_name: Spalnya_switch_left
+      state: 'off'
+    switch.spalnya_switch_right:
+      action:
+      device_temperature: 29
+      flip_indicator_light: 'ON'
+      last_seen: '2023-08-30T09:31:11.385Z'
+      linkquality: 109
+      operation_mode_left:
+      operation_mode_right:
+      power_outage_count: 9
+      power_outage_memory:
+      state_left: 'OFF'
+      state_right: 'OFF'
+      update:
+        installed_version: 25
+        latest_version: 25
+        state: idle
+      update_available: false
+      friendly_name: Spalnya_switch_right
+      state: 'off'
+    switch.toilet_switch:
+      action:
+      device_temperature: 31
+      flip_indicator_light: 'ON'
+      last_seen: '2023-08-30T09:30:48.900Z'
+      linkquality: 171
+      operation_mode:
+      power_outage_count: 12
+      power_outage_memory:
+      update:
+        installed_version: 24
+        latest_version: 24
+        state: idle
+      update_available: false
+      friendly_name: Toilet_switch
+      state: 'off'
+    switch.vanna_switch_left:
+      action:
+      device_temperature: 29
+      flip_indicator_light: 'ON'
+      last_seen: '2023-08-30T09:31:07.927Z'
+      linkquality: 153
+      operation_mode_left: control_relay
+      operation_mode_right: decoupled
+      power_outage_count: 10
+      power_outage_memory: true
+      state_left: 'OFF'
+      state_right: 'OFF'
+      update:
+        installed_version: 25
+        latest_version: 25
+        state: idle
+      update_available: false
+      friendly_name: Vanna_switch_left
+      state: 'off'
+    switch.vanna_switch_right:
+      action:
+      device_temperature: 29
+      flip_indicator_light: 'ON'
+      last_seen: '2023-08-30T09:31:07.927Z'
+      linkquality: 153
+      operation_mode_left: control_relay
+      operation_mode_right: decoupled
+      power_outage_count: 10
+      power_outage_memory: true
+      state_left: 'OFF'
+      state_right: 'OFF'
+      update:
+        installed_version: 25
+        latest_version: 25
+        state: idle
+      update_available: false
+      friendly_name: Vanna_switch_right
+      state: 'off'
+    switch.balkon_switch:
+      action:
+      device_temperature: 30
+      flip_indicator_light: 'ON'
+      last_seen: '2023-08-30T09:28:54.186Z'
+      linkquality: 83
+      operation_mode:
+      power_outage_count: 15
+      power_outage_memory:
+      update:
+        installed_version: 24
+        latest_version: 24
+        state: idle
+      update_available: false
+      friendly_name: Balkon_switch
+      state: 'off'
+    light.lamp_gostinnaya:
+      min_color_temp_kelvin: 2702
+      max_color_temp_kelvin: 6535
+      min_mireds: 153
+      max_mireds: 370
+      effect_list:
+      - Slow Temp
+      - Stop
+      supported_color_modes:
+      - color_temp
+      flowing: false
+      music_mode: false
+      night_light: false
+      friendly_name: Lamp_Gostinnaya
+      supported_features: 44
+      state: 'off'
+    light.lamp_gostinnaya_ambilight:
+      min_color_temp_kelvin: 1700
+      max_color_temp_kelvin: 6535
+      min_mireds: 153
+      max_mireds: 588
+      effect_list:
+      - Strobe color
+      - Police
+      - Christmas
+      - RGB
+      - Random Loop
+      - Fast Random Loop
+      - LSD
+      - Slowdown
+      - Night Mode
+      - Date Night
+      - Movie
+      - Sunrise
+      - Sunset
+      - Romance
+      - Happy Birthday
+      - Disco
+      - Strobe epilepsy!
+      - Alarm
+      - Police2
+      - WhatsApp
+      - Facebook
+      - Twitter
+      - Home
+      - Candle Flicker
+      - Slow Temp
+      - Stop
+      supported_color_modes:
+      - color_temp
+      - hs
+      - rgb
+      flowing: false
+      music_mode: false
+      night_light: false
+      friendly_name: Lamp_Gostinnaya Ambilight
+      supported_features: 44
+      state: 'off'
+    switch.kuhnya_led:
+      current: 0
+      energy: 0.34
+      last_seen: '2023-08-30T09:30:29.395Z'
+      linkquality: 21
+      power: 0
+      power_outage_memory: restore
+      switch_type: toggle
+      voltage: 226
+      friendly_name: Kuhnya_Led
+      state: 'off'
+    switch.koridor_strip_led:
+      current: 0
+      energy: 0.03
+      last_seen: '2023-08-30T09:31:19.423Z'
+      linkquality: 94
+      power: 0
+      power_outage_memory: restore
+      switch_type: toggle
+      voltage: 226
+      friendly_name: Koridor_Strip_Led
+      state: 'off'
+    switch.koridor_circl_led:
+      current: 0
+      energy: 0
+      last_seen: '2023-08-30T09:31:28.439Z'
+      linkquality: 105
+      power: 0
+      power_outage_memory: restore
+      switch_type: toggle
+      voltage: 226
+      friendly_name: Koridor_Circl_Led
+      state: 'off'
+  metadata: {}
+- id: '1668033998939'
+  name: Vann_Film_On
+  entities:
+    light.lamp_vann:
+      min_color_temp_kelvin: 2702
+      max_color_temp_kelvin: 6535
+      min_mireds: 153
+      max_mireds: 370
+      effect_list:
+      - Night
+      - Read
+      - Meeting
+      - Leasure
+      - Soft
+      - Rainbow
+      - Shine
+      - Beautiful
+      supported_color_modes:
+      - color_temp
+      - hs
+      color_mode: color_temp
+      brightness: 3
+      color_temp_kelvin: 4830
+      color_temp: 207
+      hs_color:
+      - 26.857
+      - 21.602
+      rgb_color:
+      - 255
+      - 224
+      - 199
+      xy_color:
+      - 0.379
+      - 0.352
+      raw_state: true
+      friendly_name: Lamp_vann
+      supported_features: 23
+      state: 'on'
+  metadata:
+    light.lamp_vann:
+      entity_only: true
+- id: '1676372273213'
+  name: Vanna_film_off
+  entities:
+    light.lamp_vann:
+      min_color_temp_kelvin: 2702
+      max_color_temp_kelvin: 6535
+      min_mireds: 153
+      max_mireds: 370
+      effect_list:
+      - Night
+      - Read
+      - Meeting
+      - Leasure
+      - Soft
+      - Rainbow
+      - Shine
+      - Beautiful
+      supported_color_modes:
+      - color_temp
+      - hs
+      color_mode: color_temp
+      brightness: 74
+      color_temp_kelvin: 4830
+      color_temp: 207
+      hs_color:
+      - 26.857
+      - 21.602
+      rgb_color:
+      - 255
+      - 224
+      - 199
+      xy_color:
+      - 0.379
+      - 0.352
+      raw_state: true
+      friendly_name: Lamp_vann
+      supported_features: 23
+      state: 'on'
+  metadata:
+    light.lamp_vann:
+      entity_only: true
+- id: '1677760078781'
+  name: Holydays
+  entities:
+    automation.battery_eco_off:
+      last_triggered: '2023-03-02T12:36:03.646358+00:00'
+      mode: single
+      current: 0
+      id: '1676020413567'
+      friendly_name: Battery_ECO_Off
+      state: 'off'
+    automation.tp_vann_on:
+      last_triggered: '2023-03-02T12:36:11.833548+00:00'
+      mode: single
+      current: 0
+      id: '1674739300994'
+      friendly_name: TP_vann_ON
+      state: 'off'
+    automation.automation_14:
+      last_triggered: '2023-03-02T12:36:27.119912+00:00'
+      mode: single
+      current: 0
+      id: '1671274408608'
+      friendly_name: TB_balkon_on
+      state: 'off'
+    automation.tb_balkon_off:
+      last_triggered: '2023-03-02T12:35:16.726702+00:00'
+      mode: single
+      current: 0
+      id: '1671274367595'
+      friendly_name: TB_Balkon_OFF
+      state: 'on'
+    automation.battery_eco:
+      last_triggered: '2023-03-02T12:35:06.705216+00:00'
+      mode: single
+      current: 0
+      id: '1676020351022'
+      friendly_name: Battery_ECO_ON
+      state: 'on'
+    automation.all_svet_off:
+      last_triggered: '2023-03-02T12:35:21.337732+00:00'
+      mode: single
+      current: 0
+      id: '1668032586244'
+      friendly_name: All_Svet_off
+      state: 'on'
+    automation.automation_20:
+      last_triggered: '2023-03-02T12:35:32.352668+00:00'
+      mode: single
+      current: 0
+      id: '1674738918025'
+      friendly_name: TP_Vann_OFF
+      state: 'on'
+    automation.svet_spalnya_on_1615:
+      last_triggered: '2023-03-01T14:16:21.350693+00:00'
+      mode: single
+      current: 0
+      id: '1671798877568'
+      friendly_name: Svet_spalnya_On_1645
+      state: 'off'
+  metadata:
+    automation.battery_eco_off:
+      entity_only: true
+    automation.tp_vann_on:
+      entity_only: true
+    automation.automation_14:
+      entity_only: true
+    automation.tb_balkon_off:
+      entity_only: true
+    automation.battery_eco:
+      entity_only: true
+    automation.all_svet_off:
+      entity_only: true
+    automation.automation_20:
+      entity_only: true
+    automation.svet_spalnya_on_1615:
+      entity_only: true
+- id: '1677834781815'
+  name: Holydays_off
+  entities:
+    automation.battery_eco_off:
+      last_triggered: '2023-03-03T05:30:00.217828+00:00'
+      mode: single
+      current: 0
+      id: '1676020413567'
+      friendly_name: Battery_ECO_Off
+      state: 'on'
+    automation.tp_vann_on:
+      last_triggered: '2023-03-03T06:00:00.412146+00:00'
+      mode: single
+      current: 0
+      id: '1674739300994'
+      friendly_name: TP_vann_ON
+      state: 'on'
+    automation.automation_14:
+      last_triggered: '2023-03-03T08:10:00.066099+00:00'
+      mode: single
+      current: 0
+      id: '1671274408608'
+      friendly_name: TB_balkon_on
+      state: 'on'
+    automation.tb_balkon_off:
+      last_triggered: '2023-03-02T22:00:00.438323+00:00'
+      mode: single
+      current: 0
+      id: '1671274367595'
+      friendly_name: TB_Balkon_OFF
+      state: 'on'
+    automation.battery_eco:
+      last_triggered: '2023-03-02T20:30:00.062672+00:00'
+      mode: single
+      current: 0
+      id: '1676020351022'
+      friendly_name: Battery_ECO_ON
+      state: 'on'
+    automation.all_svet_off:
+      last_triggered: '2023-03-03T07:41:58.210948+00:00'
+      mode: single
+      current: 0
+      id: '1668032586244'
+      friendly_name: All_Svet_off
+      state: 'on'
+    automation.automation_20:
+      last_triggered: '2023-03-02T19:59:00.465177+00:00'
+      mode: single
+      current: 0
+      id: '1674738918025'
+      friendly_name: TP_Vann_OFF
+      state: 'on'
+    automation.svet_spalnya_on_1615:
+      last_triggered: '2023-03-02T14:18:14.919544+00:00'
+      mode: single
+      current: 0
+      id: '1671798877568'
+      friendly_name: Svet_spalnya_On_1645
+      state: 'on'
+  metadata:
+    automation.battery_eco_off:
+      entity_only: true
+    automation.tp_vann_on:
+      entity_only: true
+    automation.automation_14:
+      entity_only: true
+    automation.tb_balkon_off:
+      entity_only: true
+    automation.battery_eco:
+      entity_only: true
+    automation.all_svet_off:
+      entity_only: true
+    automation.automation_20:
+      entity_only: true
+    automation.svet_spalnya_on_1615:
+      entity_only: true
+- id: '1692129041150'
+  name: Alert_Battery
+  entities:
+    light.lamp_gostinnaya:
+      min_color_temp_kelvin: 2702
+      max_color_temp_kelvin: 6535
+      min_mireds: 153
+      max_mireds: 370
+      effect_list:
+      - Slow Temp
+      - Stop
+      supported_color_modes:
+      - color_temp
+      flowing: 0
+      music_mode: false
+      night_light: false
+      friendly_name: Lamp_Gostinnaya
+      supported_features: 44
+      state: 'off'
+    light.lamp_gostinnaya_ambilight:
+      min_color_temp_kelvin: 1700
+      max_color_temp_kelvin: 6535
+      min_mireds: 153
+      max_mireds: 588
+      effect_list:
+      - Strobe color
+      - Police
+      - Christmas
+      - RGB
+      - Random Loop
+      - Fast Random Loop
+      - LSD
+      - Slowdown
+      - Night Mode
+      - Date Night
+      - Movie
+      - Sunrise
+      - Sunset
+      - Romance
+      - Happy Birthday
+      - Disco
+      - Strobe epilepsy!
+      - Alarm
+      - Police2
+      - WhatsApp
+      - Facebook
+      - Twitter
+      - Home
+      - Candle Flicker
+      - Slow Temp
+      - Stop
+      supported_color_modes:
+      - color_temp
+      - hs
+      - rgb
+      flowing: 0
+      music_mode: false
+      night_light: false
+      friendly_name: Lamp_Gostinnaya Ambilight
+      supported_features: 44
+      color_mode: rgb
+      brightness: 13
+      hs_color:
+      - 218.906
+      - 50.196
+      rgb_color:
+      - 127
+      - 172
+      - 255
+      xy_color:
+      - 0.208
+      - 0.217
+      state: 'on'
+  metadata: {}

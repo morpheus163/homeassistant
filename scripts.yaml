@@ -1,0 +1,128 @@
+'1684939062007':
+  alias: Спальня_Уборка
+  sequence:
+  - service: xiaomi_miot.call_action
+    data:
+      entity_id: vacuum.ijai_v18_73a9_robot_cleaner
+      siid: 7
+      aiid: 4
+      params:
+      - piid: 34
+        value: '[ "1_15_1_1_2_0_1_1"]'
+      - piid: 33
+        value: 1667208230
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 3
+      milliseconds: 0
+  - service: xiaomi_miot.call_action
+    data:
+      entity_id: vacuum.ijai_v18_73a9_robot_cleaner
+      siid: 7
+      aiid: 3
+      params:
+      - piid: 24
+        value: '15'
+      - piid: 25
+        value: 0
+      - piid: 26
+        value: 1
+  mode: single
+  icon: mdi:robot-vacuum
+'1684939613890':
+  alias: Гостинная_Уборка
+  sequence:
+  - service: xiaomi_miot.call_action
+    data:
+      entity_id: vacuum.ijai_v18_73a9_robot_cleaner
+      siid: 7
+      aiid: 4
+      params:
+      - piid: 34
+        value: '[ "1_15_1_1_2_0_1_1"]'
+      - piid: 33
+        value: 1667208230
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 3
+      milliseconds: 0
+  - service: xiaomi_miot.call_action
+    data:
+      entity_id: vacuum.ijai_v18_73a9_robot_cleaner
+      siid: 7
+      aiid: 3
+      params:
+      - piid: 24
+        value: '11'
+      - piid: 25
+        value: 0
+      - piid: 26
+        value: 1
+  mode: single
+  icon: mdi:robot-vacuum
+'1684939723110':
+  alias: Коридор_Уборка
+  sequence:
+  - service: xiaomi_miot.call_action
+    data:
+      entity_id: vacuum.ijai_v18_73a9_robot_cleaner
+      siid: 7
+      aiid: 4
+      params:
+      - piid: 34
+        value: '[ "1_15_1_1_2_0_1_1"]'
+      - piid: 33
+        value: 1667208230
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 3
+      milliseconds: 0
+  - service: xiaomi_miot.call_action
+    data:
+      entity_id: vacuum.ijai_v18_73a9_robot_cleaner
+      siid: 7
+      aiid: 3
+      params:
+      - piid: 24
+        value: '12'
+      - piid: 25
+        value: 0
+      - piid: 26
+        value: 1
+  mode: single
+  icon: mdi:robot-vacuum
+'1684939823440':
+  alias: Кухня_Уборка
+  sequence:
+  - service: xiaomi_miot.call_action
+    data:
+      entity_id: vacuum.ijai_v18_73a9_robot_cleaner
+      siid: 7
+      aiid: 4
+      params:
+      - piid: 34
+        value: '[ "1_15_1_1_2_0_1_1"]'
+      - piid: 33
+        value: 1667208230
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 3
+      milliseconds: 0
+  - service: xiaomi_miot.call_action
+    data:
+      entity_id: vacuum.ijai_v18_73a9_robot_cleaner
+      siid: 7
+      aiid: 3
+      params:
+      - piid: 24
+        value: '13'
+      - piid: 25
+        value: 0
+      - piid: 26
+        value: 1
+  mode: single
+  icon: mdi:robot-vacuum

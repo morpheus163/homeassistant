@@ -1,0 +1,1239 @@
+- id: '1667301062183'
+  alias: Vanna-Koridor
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: 47b2ad653559b6244d84be58e7aee821
+    type: action
+    subtype: single_right
+    discovery_id: 0x54ef441000400d4c action_single_right
+  condition: []
+  action:
+  - type: toggle
+    device_id: 1b748c1698b3ece8dbb91b0f1454ac2a
+    entity_id: switch.koridor_strip_led
+    domain: switch
+  mode: single
+- id: '1667320129039'
+  alias: vent_masterskaya
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: ab4c5da890b66cce12d984d7f158248a
+    type: action
+    subtype: double_right
+    discovery_id: 0x54ef441000401a57 action_double_right
+  condition: []
+  action:
+  - type: toggle
+    device_id: 47f04a3e70186759bad6f4c5caf2768a
+    entity_id: switch.masterskaya_vent_rele
+    domain: switch
+  mode: single
+- id: '1668032586244'
+  alias: All_Svet_off
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: f4b00bb626fba820fabee4be45843b4a
+    type: action
+    subtype: double_right
+    discovery_id: 0x54ef441000401a59 action_double_right
+  condition: []
+  action:
+  - service: scene.turn_on
+    target:
+      entity_id: scene.all_svet_off
+    metadata: {}
+  mode: single
+- id: '1668103974912'
+  alias: Epson_ON
+  description: ''
+  trigger:
+  - platform: device
+    device_id: abbadf7c111bda20f20d1acc3dd77733
+    domain: media_player
+    entity_id: media_player.epson
+    type: turned_on
+  condition: []
+  action:
+  - type: turn_off
+    device_id: 3b6bf490c5da17beb3c62aff76989fce
+    entity_id: light.lamp_gostinnaya
+    domain: light
+  - type: turn_on
+    device_id: 3b6bf490c5da17beb3c62aff76989fce
+    entity_id: light.lamp_gostinnaya_ambilight
+    domain: light
+    brightness_pct: 5
+  - type: turn_off
+    device_id: 711fea813bb8e0ea66bbe5191218a18a
+    entity_id: switch.balkon_switch_flip_indicator_light
+    domain: switch
+  - type: turn_on
+    device_id: 36cef5962db40d6f883510c3af5ad5b1
+    entity_id: switch.gostinaya_switch_flip_indicator_light
+    domain: switch
+  - device_id: d37998c939cd62ddc41b53d4e366eaf8
+    domain: cover
+    entity_id: cover.gost_shtory
+    type: open
+  - device_id: 03a60fc8d83f10463dd0d01ad730c6db
+    domain: cover
+    entity_id: cover.gost_balkon_shtora
+    type: close
+  mode: single
+- id: '1668890863391'
+  alias: Kuhnya_left
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: 1e2407a619834331702f06ac066a8d71
+    type: action
+    subtype: button_1_single
+    discovery_id: 0x54ef44100042c3d3 action_button_1_single
+  condition: []
+  action:
+  - type: toggle
+    device_id: 2f4917a2822fb3a0b3d8170199e47521
+    entity_id: switch.kuhnya_swich_left
+    domain: switch
+  mode: single
+- id: '1668891558967'
+  alias: Spalnya_off
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: c47f5f811c2cbf3ca5718f6ec6610a7f
+    type: action
+    subtype: button_2_single
+    discovery_id: 0x54ef4410004561d7 action_button_2_single
+  - platform: device
+    domain: mqtt
+    device_id: e5bc678a6dc0db21aea60abbff9268a5
+    type: action
+    subtype: button_2_single
+    discovery_id: 0x54ef4410004561f6 action_button_2_single
+  condition: []
+  action:
+  - type: toggle
+    device_id: 72e41cca5aefff7b64ced588406845ae
+    entity_id: switch.spalnya_switch_left
+    domain: switch
+  mode: single
+- id: '1668891841073'
+  alias: Kuhnya_right
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: 1e2407a619834331702f06ac066a8d71
+    type: action
+    subtype: button_2_single
+    discovery_id: 0x54ef44100042c3d3 action_button_2_single
+  condition: []
+  action:
+  - type: toggle
+    device_id: 2f4917a2822fb3a0b3d8170199e47521
+    entity_id: switch.kuhnya_swich_right
+    domain: switch
+  mode: single
+- id: '1668891987113'
+  alias: Spalnya_all_off
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: c47f5f811c2cbf3ca5718f6ec6610a7f
+    type: action
+    subtype: button_1_single
+    discovery_id: 0x54ef4410004561d7 action_button_1_single
+  - platform: device
+    domain: mqtt
+    device_id: e5bc678a6dc0db21aea60abbff9268a5
+    type: action
+    subtype: button_1_single
+    discovery_id: 0x54ef4410004561f6 action_button_1_single
+  condition: []
+  action:
+  - service: scene.turn_on
+    target:
+      entity_id: scene.all_svet_off
+    metadata: {}
+  mode: single
+- id: '1670342987378'
+  alias: Toilet_Svet_On
+  description: ''
+  trigger:
+  - type: motion
+    platform: device
+    device_id: 6ba461553d8f54ff920546808bcd3b83
+    entity_id: binary_sensor.toilet_dv_occupancy
+    domain: binary_sensor
+  condition: []
+  action:
+  - type: turn_on
+    device_id: 47ab01fd55583d23dcb765b80686870b
+    entity_id: switch.toilet_switch
+    domain: switch
+  - type: turn_on
+    device_id: ee2aa9b1f63ee99ed0b009387a62afda
+    entity_id: light.lamp_toilet_2
+    domain: light
+  mode: single
+- id: '1670343246594'
+  alias: Toilet_Svet_Off
+  description: ''
+  trigger:
+  - type: no_motion
+    platform: device
+    device_id: 6ba461553d8f54ff920546808bcd3b83
+    entity_id: binary_sensor.toilet_dv_occupancy
+    domain: binary_sensor
+    for:
+      hours: 0
+      minutes: 2
+      seconds: 0
+  condition: []
+  action:
+  - type: turn_off
+    device_id: 47ab01fd55583d23dcb765b80686870b
+    entity_id: switch.toilet_switch
+    domain: switch
+  mode: single
+- id: '1670350466182'
+  alias: Koridor_on
+  description: ''
+  trigger:
+  - type: motion
+    platform: device
+    device_id: 8145923bc45f7068ed32492522de7cde
+    entity_id: binary_sensor.koridor_dv_occupancy
+    domain: binary_sensor
+  condition: []
+  action:
+  - type: turn_on
+    device_id: f4b00bb626fba820fabee4be45843b4a
+    entity_id: switch.koridor_switch_right
+    domain: switch
+  mode: single
+- id: '1670350524903'
+  alias: Koridor_off
+  description: ''
+  trigger:
+  - type: no_motion
+    platform: device
+    device_id: 8145923bc45f7068ed32492522de7cde
+    entity_id: binary_sensor.koridor_dv_occupancy
+    domain: binary_sensor
+  condition: []
+  action:
+  - type: turn_off
+    device_id: f4b00bb626fba820fabee4be45843b4a
+    entity_id: switch.koridor_switch_right
+    domain: switch
+  mode: single
+- id: '1671274367595'
+  alias: TB_Balkon_OFF
+  description: ''
+  trigger:
+  - platform: time
+    at: '23:59:00'
+  condition: []
+  action:
+  - device_id: 47ebe2ee450d863a7d20ac065495e580
+    domain: climate
+    entity_id: climate.0xa4c13801bf778bad
+    type: set_hvac_mode
+    hvac_mode: 'off'
+  mode: single
+- id: '1671274408608'
+  alias: TB_balkon_on
+  description: ''
+  trigger:
+  - platform: time
+    at: '12:10:00'
+  condition: []
+  action:
+  - device_id: 47ebe2ee450d863a7d20ac065495e580
+    domain: climate
+    entity_id: climate.0xa4c13801bf778bad
+    type: set_hvac_mode
+    hvac_mode: heat
+  mode: single
+- id: '1671798877568'
+  alias: Svet_spalnya_On_1645
+  description: ''
+  trigger:
+  - platform: sun
+    event: sunset
+  condition: []
+  action:
+  - type: turn_on
+    device_id: 72e41cca5aefff7b64ced588406845ae
+    entity_id: switch.spalnya_switch_left
+    domain: switch
+  mode: single
+- id: '1673018616920'
+  alias: Lamp_Boris_Off
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: c47f5f811c2cbf3ca5718f6ec6610a7f
+    type: action
+    subtype: button_3_single
+    discovery_id: 0x54ef4410004561d7 action_button_3_single
+  - platform: device
+    domain: mqtt
+    device_id: e5bc678a6dc0db21aea60abbff9268a5
+    type: action
+    subtype: button_3_single
+    discovery_id: 0x54ef4410004561f6 action_button_3_single
+  condition: []
+  action:
+  - type: toggle
+    device_id: 777c456394fb05439aadab5a17875717
+    entity_id: light.lamp_boris
+    domain: light
+  mode: single
+- id: '1673018836043'
+  alias: Lamp_Lena_off
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: c47f5f811c2cbf3ca5718f6ec6610a7f
+    type: action
+    subtype: button_4_single
+    discovery_id: 0x54ef4410004561d7 action_button_4_single
+  - platform: device
+    domain: mqtt
+    device_id: e5bc678a6dc0db21aea60abbff9268a5
+    type: action
+    subtype: button_4_single
+    discovery_id: 0x54ef4410004561f6 action_button_4_single
+  condition: []
+  action:
+  - type: toggle
+    device_id: dfa18a5df422eb3cc5018e021edace49
+    entity_id: light.lamp_lena
+    domain: light
+  mode: single
+- id: '1673019052406'
+  alias: Lamp_Gostinnaya
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: 36cef5962db40d6f883510c3af5ad5b1
+    type: action
+    subtype: single_left
+    discovery_id: 0x54ef441000402a3a action_single_left
+  - platform: device
+    domain: mqtt
+    device_id: 36cef5962db40d6f883510c3af5ad5b1
+    type: action
+    subtype: single_right
+    discovery_id: 0x54ef441000402a3a action_single_right
+  condition: []
+  action:
+  - type: toggle
+    device_id: 3b6bf490c5da17beb3c62aff76989fce
+    entity_id: light.lamp_gostinnaya
+    domain: light
+  mode: single
+- id: '1674128081500'
+  alias: Brizer
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: c47f5f811c2cbf3ca5718f6ec6610a7f
+    type: action
+    subtype: button_1_hold
+    discovery_id: 0x54ef4410004561d7 action_button_1_hold
+  - platform: device
+    domain: mqtt
+    device_id: e5bc678a6dc0db21aea60abbff9268a5
+    type: action
+    subtype: button_1_hold
+    discovery_id: 0x54ef4410004561f6 action_button_1_hold
+  condition: []
+  action:
+  - type: toggle
+    device_id: be43d81d1fc45b4f4e6d048980f6599a
+    entity_id: fan.zhimi_va4_b644_air_fresh
+    domain: fan
+  mode: single
+- id: '1674738918025'
+  alias: TP_Vann_OFF
+  description: ''
+  trigger:
+  - platform: time
+    at: '23:59:00'
+  condition: []
+  action:
+  - device_id: 50d33e98b4df2847e083f7baaf484341
+    domain: climate
+    entity_id: climate.vanna_teply_pol
+    type: set_hvac_mode
+    hvac_mode: 'off'
+  - wait_for_trigger: []
+    timeout:
+      hours: 0
+      minutes: 0
+      seconds: 10
+      milliseconds: 0
+  - device_id: 12022764112163078b47f7c0d59d7189
+    domain: climate
+    entity_id: climate.toilet_teply_pol
+    type: set_hvac_mode
+    hvac_mode: 'off'
+  mode: single
+- id: '1674739300994'
+  alias: TP_vann_ON
+  description: ''
+  trigger:
+  - platform: time
+    at: '10:00:00'
+  condition: []
+  action:
+  - device_id: 50d33e98b4df2847e083f7baaf484341
+    domain: climate
+    entity_id: climate.vanna_teply_pol
+    type: set_hvac_mode
+    hvac_mode: heat
+  - wait_for_trigger: []
+    continue_on_timeout: true
+    timeout:
+      hours: 0
+      minutes: 0
+      seconds: 10
+      milliseconds: 0
+  - device_id: 12022764112163078b47f7c0d59d7189
+    domain: climate
+    entity_id: climate.toilet_teply_pol
+    type: set_hvac_mode
+    hvac_mode: heat
+  mode: single
+- id: '1676020351022'
+  alias: Battery_ECO_ON
+  description: ''
+  trigger:
+  - platform: time
+    at: 00:30:00
+  condition: []
+  action:
+  - type: turn_on
+    device_id: 8b7dc0902a6c3878e8cfc7473b776775
+    entity_id: switch.gost_battery_eco_mode
+    domain: switch
+  - type: turn_on
+    device_id: 89646aa49cc6656bb542bbb11860fb75
+    entity_id: switch.spalnya_battery_eco_mode
+    domain: switch
+  - type: turn_on
+    device_id: 995d8fecba5a4c2e4310e17904ef1ae4
+    entity_id: switch.kuhnya_battery_eco_mode
+    domain: switch
+  mode: single
+- id: '1676020413567'
+  alias: Battery_ECO_Off
+  description: ''
+  trigger:
+  - platform: time
+    at: 09:30:00
+  condition: []
+  action:
+  - type: turn_off
+    device_id: 8b7dc0902a6c3878e8cfc7473b776775
+    entity_id: switch.gost_battery_eco_mode
+    domain: switch
+  - type: turn_off
+    device_id: 995d8fecba5a4c2e4310e17904ef1ae4
+    entity_id: switch.kuhnya_battery_eco_mode
+    domain: switch
+  mode: single
+- id: '1676025748532'
+  alias: Epson_off
+  description: ''
+  trigger:
+  - platform: device
+    device_id: abbadf7c111bda20f20d1acc3dd77733
+    domain: media_player
+    entity_id: media_player.epson
+    type: turned_off
+  condition: []
+  action:
+  - type: turn_on
+    device_id: 711fea813bb8e0ea66bbe5191218a18a
+    entity_id: switch.balkon_switch_flip_indicator_light
+    domain: switch
+  - type: turn_off
+    device_id: 36cef5962db40d6f883510c3af5ad5b1
+    entity_id: switch.gostinaya_switch_flip_indicator_light
+    domain: switch
+  - service: media_player.turn_off
+    data: {}
+    target:
+      entity_id: media_player.soundbar930b
+  - device_id: d37998c939cd62ddc41b53d4e366eaf8
+    domain: cover
+    entity_id: cover.gost_shtory
+    type: set_position
+    position: 100
+  - device_id: 03a60fc8d83f10463dd0d01ad730c6db
+    domain: cover
+    entity_id: cover.gost_balkon_shtora
+    type: set_position
+    position: 0
+  mode: single
+- id: '1676236011188'
+  alias: Tv-vann-off
+  description: ''
+  trigger:
+  - platform: device
+    device_id: ff82e4ec884b6e881e248a17d51c4668
+    domain: media_player
+    entity_id: media_player.android_tv_192_168_88_207
+    type: turned_off
+  condition: []
+  action:
+  - service: scene.turn_on
+    target:
+      entity_id: scene.vanna_film_off
+    metadata: {}
+  mode: single
+- id: '1676372442415'
+  alias: Vann_TV_ON
+  description: ''
+  trigger:
+  - platform: device
+    device_id: ff82e4ec884b6e881e248a17d51c4668
+    domain: media_player
+    entity_id: media_player.android_tv_192_168_88_207
+    type: playing
+  condition: []
+  action:
+  - service: scene.turn_on
+    target:
+      entity_id: scene.vann_film
+    metadata: {}
+  - service: automation.turn_off
+    data:
+      stop_actions: true
+    target:
+      entity_id: automation.vanna_light_off
+  mode: single
+- id: '1676372481417'
+  alias: Vann_TV_OFF
+  description: ''
+  trigger:
+  - platform: device
+    device_id: ff82e4ec884b6e881e248a17d51c4668
+    domain: media_player
+    entity_id: media_player.android_tv_192_168_88_207
+    type: idle
+  condition: []
+  action:
+  - service: scene.turn_on
+    target:
+      entity_id: scene.vanna_film_off
+    metadata: {}
+  - service: automation.turn_on
+    data: {}
+    target:
+      entity_id: automation.vanna_light_off
+  mode: single
+- id: '1677769632298'
+  alias: TP_Vann_25C_on
+  description: ''
+  trigger:
+  - platform: time
+    at: '12:00:00'
+  condition: []
+  action:
+  - service: climate.set_temperature
+    data:
+      temperature: 25
+    target:
+      entity_id:
+      - climate.toilet_teply_pol
+      - climate.vanna_teply_pol
+  mode: single
+- id: '1677769934480'
+  alias: TP_Vann_22C
+  description: ''
+  trigger:
+  - platform: time
+    at: '23:00:00'
+  condition: []
+  action:
+  - service: climate.set_temperature
+    data:
+      temperature: 22
+    target:
+      entity_id:
+      - climate.vanna_teply_pol
+      - climate.toilet_teply_pol
+  mode: single
+- id: '1677834165436'
+  alias: Holyday start
+  description: ''
+  trigger:
+  - platform: time
+    at: '16:30:00'
+  condition: []
+  action:
+  - service: scene.turn_on
+    target:
+      entity_id: scene.holydays
+    metadata: {}
+  - service: climate.set_temperature
+    data:
+      temperature: 5
+    target:
+      entity_id: climate.0xa4c13801bf778bad
+  - service: climate.set_temperature
+    data:
+      temperature: 17
+    target:
+      entity_id:
+      - climate.gost_battery
+      - climate.kuhnya_battery
+      - climate.spalnya_battery
+      - climate.toilet_teply_pol
+      - climate.vanna_teply_pol
+  mode: single
+- id: '1677834741780'
+  alias: Ho;ydays_off
+  description: ''
+  trigger: []
+  condition: []
+  action:
+  - service: climate.set_temperature
+    data:
+      temperature: 20
+      hvac_mode: heat
+    target:
+      entity_id: climate.0xa4c13801bf778bad
+  - service: climate.set_temperature
+    data:
+      temperature: 22
+      hvac_mode: heat
+    target:
+      entity_id:
+      - climate.gost_battery
+      - climate.kuhnya_battery
+      - climate.spalnya_battery
+  - service: climate.set_temperature
+    data:
+      temperature: 25
+      hvac_mode: heat
+    target:
+      entity_id:
+      - climate.toilet_teply_pol
+      - climate.vanna_teply_pol
+  mode: single
+- id: '1678363884077'
+  alias: Brizer_Battery_ECO
+  description: ''
+  trigger:
+  - platform: device
+    type: turned_on
+    device_id: be43d81d1fc45b4f4e6d048980f6599a
+    entity_id: fan.zhimi_va4_b644_air_fresh
+    domain: fan
+  condition: []
+  action:
+  - type: turn_on
+    device_id: 89646aa49cc6656bb542bbb11860fb75
+    entity_id: switch.spalnya_battery_eco_mode
+    domain: switch
+  mode: single
+- id: '1678363985678'
+  alias: Brizer_battery_eco_off
+  description: ''
+  trigger:
+  - platform: device
+    type: turned_off
+    device_id: be43d81d1fc45b4f4e6d048980f6599a
+    entity_id: fan.zhimi_va4_b644_air_fresh
+    domain: fan
+    for:
+      hours: 0
+      minutes: 30
+      seconds: 0
+  condition: []
+  action:
+  - type: turn_off
+    device_id: 89646aa49cc6656bb542bbb11860fb75
+    entity_id: switch.spalnya_battery_eco_mode
+    domain: switch
+  mode: single
+- id: '1678900458344'
+  alias: Koridor_BIG_off
+  description: ''
+  trigger:
+  - platform: device
+    type: turned_on
+    device_id: f4b00bb626fba820fabee4be45843b4a
+    entity_id: switch.koridor_switch_left
+    domain: switch
+    for:
+      hours: 0
+      minutes: 2
+      seconds: 0
+  condition:
+  - condition: and
+    conditions:
+    - type: is_not_open
+      condition: device
+      device_id: aee8100e8675685b7e806958c082b716
+      entity_id: binary_sensor.stiralka_door_contact
+      domain: binary_sensor
+  action:
+  - type: turn_off
+    device_id: f4b00bb626fba820fabee4be45843b4a
+    entity_id: switch.koridor_switch_left
+    domain: switch
+  mode: single
+- id: '1680782513147'
+  alias: Away_Home
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: f4b00bb626fba820fabee4be45843b4a
+    type: action
+    subtype: single_both
+    discovery_id: 0x54ef441000401a59 action_single_both
+  condition: []
+  action:
+  - service: climate.set_temperature
+    data:
+      temperature: 17
+    target:
+      entity_id:
+      - climate.0xa4c13801bf778bad
+      - climate.toilet_teply_pol
+      - climate.vanna_teply_pol
+  - service: scene.turn_on
+    target:
+      entity_id: scene.all_svet_off
+    metadata: {}
+  mode: single
+- id: '1681140673815'
+  alias: Spalnya_Shtory_Open
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: c47f5f811c2cbf3ca5718f6ec6610a7f
+    type: action
+    subtype: button_6_hold
+    discovery_id: 0x54ef4410004561d7 action_button_6_hold
+  - platform: device
+    domain: mqtt
+    device_id: e5bc678a6dc0db21aea60abbff9268a5
+    type: action
+    subtype: button_6_hold
+    discovery_id: 0x54ef4410004561f6 action_button_6_hold
+  condition: []
+  action:
+  - device_id: ab010a320bca09b3f1b95193aa39c892
+    domain: cover
+    entity_id: cover.spalnya_shtory
+    type: open
+  mode: single
+- id: '1681140953537'
+  alias: Spalnya_Shtory_Close
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: c47f5f811c2cbf3ca5718f6ec6610a7f
+    type: action
+    subtype: button_5_hold
+    discovery_id: 0x54ef4410004561d7 action_button_5_hold
+  - platform: device
+    domain: mqtt
+    device_id: e5bc678a6dc0db21aea60abbff9268a5
+    type: action
+    subtype: button_5_hold
+    discovery_id: 0x54ef4410004561f6 action_button_5_hold
+  condition: []
+  action:
+  - device_id: ab010a320bca09b3f1b95193aa39c892
+    domain: cover
+    entity_id: cover.spalnya_shtory
+    type: close
+  mode: single
+- id: '1681142753612'
+  alias: Spalnya_Shtory_stop
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: c47f5f811c2cbf3ca5718f6ec6610a7f
+    type: action
+    subtype: button_5_single
+    discovery_id: 0x54ef4410004561d7 action_button_5_single
+  - platform: device
+    domain: mqtt
+    device_id: e5bc678a6dc0db21aea60abbff9268a5
+    type: action
+    subtype: button_5_single
+    discovery_id: 0x54ef4410004561f6 action_button_5_single
+  - platform: device
+    domain: mqtt
+    device_id: c47f5f811c2cbf3ca5718f6ec6610a7f
+    type: action
+    subtype: button_6_single
+    discovery_id: 0x54ef4410004561d7 action_button_6_single
+  - platform: device
+    domain: mqtt
+    device_id: e5bc678a6dc0db21aea60abbff9268a5
+    type: action
+    subtype: button_6_single
+    discovery_id: 0x54ef4410004561f6 action_button_6_single
+  condition: []
+  action:
+  - device_id: ab010a320bca09b3f1b95193aa39c892
+    domain: cover
+    entity_id: cover.spalnya_shtory
+    type: stop
+  mode: single
+- id: '1682028200119'
+  alias: Kondei_ON
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: c47f5f811c2cbf3ca5718f6ec6610a7f
+    type: action
+    subtype: button_2_hold
+    discovery_id: 0x54ef4410004561d7 action_button_2_hold
+  - platform: device
+    domain: mqtt
+    device_id: e5bc678a6dc0db21aea60abbff9268a5
+    type: action
+    subtype: button_2_hold
+    discovery_id: 0x54ef4410004561f6 action_button_2_hold
+  condition:
+  - condition: and
+    conditions:
+    - condition: state
+      entity_id: climate.kondei_spanya_2
+      state: 'off'
+  action:
+  - service: climate.turn_on
+    data: {}
+    target:
+      entity_id:
+      - climate.kondei_spanya_2
+  mode: single
+- id: '1682028243379'
+  alias: Kondei_Off
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: c47f5f811c2cbf3ca5718f6ec6610a7f
+    type: action
+    subtype: button_2_hold
+    discovery_id: 0x54ef4410004561d7 action_button_2_hold
+  - platform: device
+    domain: mqtt
+    device_id: e5bc678a6dc0db21aea60abbff9268a5
+    type: action
+    subtype: button_2_hold
+    discovery_id: 0x54ef4410004561f6 action_button_2_hold
+  condition:
+  - condition: not
+    conditions:
+    - condition: state
+      entity_id: climate.kondei_spanya_2
+      state: 'off'
+  action:
+  - service: climate.turn_off
+    data: {}
+    target:
+      entity_id: climate.kondei_spanya_2
+  mode: single
+- id: '1685475873068'
+  alias: Gost_Shtory_vniz
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: 7143d24b3384dac3f393bdee00cf39c0
+    type: action
+    subtype: button_3_hold
+    discovery_id: 0x54ef44100042b66c action_button_3_hold
+  condition: []
+  action:
+  - device_id: d37998c939cd62ddc41b53d4e366eaf8
+    domain: cover
+    entity_id: cover.gost_shtory
+    type: set_position
+    position: 0
+  - device_id: 03a60fc8d83f10463dd0d01ad730c6db
+    domain: cover
+    entity_id: cover.gost_balkon_shtora
+    type: set_position
+    position: 100
+  mode: single
+- id: '1685475922170'
+  alias: Gost_Shtory_vverh
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: 7143d24b3384dac3f393bdee00cf39c0
+    type: action
+    subtype: button_4_hold
+    discovery_id: 0x54ef44100042b66c action_button_4_hold
+  condition: []
+  action:
+  - device_id: d37998c939cd62ddc41b53d4e366eaf8
+    domain: cover
+    entity_id: cover.gost_shtory
+    type: set_position
+    position: 100
+  - device_id: 03a60fc8d83f10463dd0d01ad730c6db
+    domain: cover
+    entity_id: cover.gost_balkon_shtora
+    type: set_position
+    position: 0
+  mode: single
+- id: '1688034207465'
+  alias: Gost_Kondei_On
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: 7143d24b3384dac3f393bdee00cf39c0
+    type: action
+    subtype: button_1_hold
+    discovery_id: 0x54ef44100042b66c action_button_1_hold
+  condition:
+  - condition: and
+    conditions:
+    - condition: state
+      entity_id: climate.gost_kondei_3
+      state: 'off'
+  action:
+  - service: climate.turn_on
+    data: {}
+    target:
+      entity_id:
+      - climate.gost_kondei_3
+  mode: single
+- id: '1688034281217'
+  alias: Gost_Kondei_Off
+  description: Gost_Kondei_Off
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: 7143d24b3384dac3f393bdee00cf39c0
+    type: action
+    subtype: button_1_hold
+    discovery_id: 0x54ef44100042b66c action_button_1_hold
+  condition:
+  - condition: not
+    conditions:
+    - condition: state
+      entity_id: climate.gost_kondei_3
+      state: 'off'
+  action:
+  - service: climate.turn_off
+    data: {}
+    target:
+      entity_id:
+      - climate.gost_kondei_3
+  mode: single
+- id: '1688130461237'
+  alias: Gost_lamp_switch
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: 7143d24b3384dac3f393bdee00cf39c0
+    type: action
+    subtype: button_1_single
+    discovery_id: 0x54ef44100042b66c action_button_1_single
+  - platform: device
+    domain: mqtt
+    device_id: 7143d24b3384dac3f393bdee00cf39c0
+    type: action
+    subtype: button_2_single
+    discovery_id: 0x54ef44100042b66c action_button_2_single
+  condition: []
+  action:
+  - type: toggle
+    device_id: 3b6bf490c5da17beb3c62aff76989fce
+    entity_id: light.lamp_gostinnaya
+    domain: light
+  - type: turn_off
+    device_id: 3b6bf490c5da17beb3c62aff76989fce
+    entity_id: light.lamp_gostinnaya_ambilight
+    domain: light
+  mode: single
+- id: '1690234156575'
+  alias: Будильник Бориса
+  description: штора вверх
+  trigger:
+  - platform: time
+    at: sensor.m2012k11ac_next_alarm
+  condition: []
+  action:
+  - device_id: ab010a320bca09b3f1b95193aa39c892
+    domain: cover
+    entity_id: cover.spalnya_shtory
+    type: open
+  mode: single
+- id: '1690577828707'
+  alias: Сброс счетчика
+  description: ''
+  trigger: []
+  condition: []
+  action:
+  - service: utility_meter.calibrate
+    data:
+      value: '0'
+    target:
+      entity_id:
+      - sensor.goriachaia_voda_v_vannoi
+      - sensor.goriachaia_voda_v_tualete
+      - sensor.kholodnaia_voda_v_vannoi
+      - sensor.kholodnaia_voda_v_tualete
+  mode: single
+- id: '1690815150548'
+  alias: Kuhnya_led
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: 1e2407a619834331702f06ac066a8d71
+    type: action
+    subtype: button_3_single
+    discovery_id: 0x54ef44100042c3d3 action_button_3_single
+  condition: []
+  action:
+  - type: toggle
+    device_id: 68481e990d39c9484dc943307cb484b3
+    entity_id: switch.kuhnya_led
+    domain: switch
+  mode: single
+- id: '1692128668552'
+  alias: Battery_gost_shtora
+  description: ''
+  trigger:
+  - type: battery_level
+    platform: device
+    device_id: 03a60fc8d83f10463dd0d01ad730c6db
+    entity_id: sensor.gost_balkon_shtora_battery
+    domain: sensor
+    below: 16
+    for:
+      hours: 1
+      minutes: 0
+      seconds: 0
+  condition: []
+  action:
+  - service: scene.turn_on
+    target:
+      entity_id: scene.alert_battery
+    metadata: {}
+  mode: single
+- id: '1692619132583'
+  alias: Stiralka_svet_on
+  description: ''
+  trigger:
+  - type: opened
+    platform: device
+    device_id: aee8100e8675685b7e806958c082b716
+    entity_id: binary_sensor.stiralka_door_contact
+    domain: binary_sensor
+  condition: []
+  action:
+  - type: turn_on
+    device_id: 1b748c1698b3ece8dbb91b0f1454ac2a
+    entity_id: switch.koridor_strip_led
+    domain: switch
+  mode: single
+- id: '1692619159920'
+  alias: Stiralka_svet_off
+  description: ''
+  trigger:
+  - type: not_opened
+    platform: device
+    device_id: aee8100e8675685b7e806958c082b716
+    entity_id: binary_sensor.stiralka_door_contact
+    domain: binary_sensor
+  condition: []
+  action:
+  - type: turn_off
+    device_id: 1b748c1698b3ece8dbb91b0f1454ac2a
+    entity_id: switch.koridor_strip_led
+    domain: switch
+  mode: single
+- id: '1692625299710'
+  alias: WATER!!!
+  description: ''
+  trigger:
+  - type: moist
+    platform: device
+    device_id: 4b1566de68dbfe32be39072342299f23
+    entity_id: binary_sensor.stiralka_water_sensor_water_leak
+    domain: binary_sensor
+  - type: moist
+    platform: device
+    device_id: 7ff977d5b41c1fccaada72671608d992
+    entity_id: binary_sensor.kuhnya_water_sensor_water_leak
+    domain: binary_sensor
+  condition: []
+  action:
+  - type: turn_on
+    device_id: 2f4917a2822fb3a0b3d8170199e47521
+    entity_id: switch.kuhnya_swich_left
+    domain: switch
+  - type: turn_on
+    device_id: 2f4917a2822fb3a0b3d8170199e47521
+    entity_id: switch.kuhnya_swich_right
+    domain: switch
+  - device_id: 3b6bf490c5da17beb3c62aff76989fce
+    domain: light
+    entity_id: light.lamp_gostinnaya
+    type: flash
+  - type: turn_on
+    device_id: 72e41cca5aefff7b64ced588406845ae
+    entity_id: switch.spalnya_switch_left
+    domain: switch
+  - type: turn_on
+    device_id: 72e41cca5aefff7b64ced588406845ae
+    entity_id: switch.spalnya_switch_right
+    domain: switch
+  - device_id: dfa18a5df422eb3cc5018e021edace49
+    domain: light
+    entity_id: light.lamp_lena
+    type: flash
+  - device_id: a6c9dfdd0352116a18707c27a9ad09f4
+    domain: light
+    entity_id: light.lamp_moika
+    type: flash
+  - device_id: 777c456394fb05439aadab5a17875717
+    domain: light
+    entity_id: light.lamp_boris
+    type: flash
+  - device_id: fb0e2576d8f75c35dffb7c5651fcc481
+    domain: light
+    entity_id: light.lamp_obed
+    type: flash
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 1
+      milliseconds: 0
+  - type: turn_off
+    device_id: 2f4917a2822fb3a0b3d8170199e47521
+    entity_id: switch.kuhnya_swich_left
+    domain: switch
+  - type: turn_off
+    device_id: 2f4917a2822fb3a0b3d8170199e47521
+    entity_id: switch.kuhnya_swich_right
+    domain: switch
+  - device_id: 3b6bf490c5da17beb3c62aff76989fce
+    domain: light
+    entity_id: light.lamp_gostinnaya
+    type: flash
+  - type: turn_off
+    device_id: 72e41cca5aefff7b64ced588406845ae
+    entity_id: switch.spalnya_switch_left
+    domain: switch
+  - type: turn_off
+    device_id: 72e41cca5aefff7b64ced588406845ae
+    entity_id: switch.spalnya_switch_right
+    domain: switch
+  - device_id: dfa18a5df422eb3cc5018e021edace49
+    domain: light
+    entity_id: light.lamp_lena
+    type: flash
+  - device_id: a6c9dfdd0352116a18707c27a9ad09f4
+    domain: light
+    entity_id: light.lamp_moika
+    type: flash
+  - device_id: 777c456394fb05439aadab5a17875717
+    domain: light
+    entity_id: light.lamp_boris
+    type: flash
+  - device_id: fb0e2576d8f75c35dffb7c5651fcc481
+    domain: light
+    entity_id: light.lamp_obed
+    type: flash
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 1
+      milliseconds: 0
+  mode: restart
+- id: '1692882192888'
+  alias: Koridor_krug
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: ab4c5da890b66cce12d984d7f158248a
+    type: action
+    subtype: single_right
+    discovery_id: 0x54ef441000401a57 action_single_right
+  condition: []
+  action:
+  - type: toggle
+    device_id: bac1426f2a97e16f339760f3afdc5cd1
+    entity_id: switch.koridor_circl_led
+    domain: switch
+  mode: single
+- id: '1695396255672'
+  alias: Vanna_Light_ON
+  description: ''
+  trigger:
+  - type: motion
+    platform: device
+    device_id: 95d5309adebd6e0d0b449d2ee1d3f738
+    entity_id: binary_sensor.vanna_dv_occupancy
+    domain: binary_sensor
+  condition: []
+  action:
+  - type: turn_on
+    device_id: 47b2ad653559b6244d84be58e7aee821
+    entity_id: switch.vanna_switch_left
+    domain: switch
+  mode: single
+- id: '1695396329044'
+  alias: Vanna_Light_off
+  description: ''
+  trigger:
+  - type: no_motion
+    platform: device
+    device_id: 95d5309adebd6e0d0b449d2ee1d3f738
+    entity_id: binary_sensor.vanna_dv_occupancy
+    domain: binary_sensor
+    for:
+      hours: 0
+      minutes: 3
+      seconds: 0
+  condition: []
+  action:
+  - type: turn_off
+    device_id: 47b2ad653559b6244d84be58e7aee821
+    entity_id: switch.vanna_switch_left
+    domain: switch
+  mode: single

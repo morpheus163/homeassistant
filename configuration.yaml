@@ -1,0 +1,98 @@
+
+# Loads default set of integrations. Do not remove.
+default_config:
+
+# Text to speech
+tts:
+  - platform: google_translate
+
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+
+media_player:
+  - platform: smartthings_soundbar
+    name: Soundbar930B
+    api_key: "4fed5df0-02a5-4dc3-b857-e36ff149acb5"
+    device_id: "f20ae443-a8f6-1483-2805-fddfb4acc66b"
+    max_volume: 100
+    
+smartir:
+
+wake_on_lan:
+
+switch:
+  - platform: broadlink
+    host: 192.168.88.203
+    mac: EC:0B:AE:9E:BB:8A
+  - platform: broadlink
+    host: 192.168.88.202
+    mac: B4:43:0D:F9:24:4A
+  - platform: broadlink
+    host: 192.168.88.191
+    mac: B4:43:0D:AA:8E:BF
+  - platform: wake_on_lan
+    mac: F4:6D:04:5C:24:75
+
+climate:
+  - platform: smartir
+    name: Kondei_Spanya
+    unique_id: Kondei_Spalnya
+    device_code: 1180
+    controller_data: remote.broadlinkremote
+    temperature_sensor: sensor.spalnya_temp_temperature
+    humidity_sensor: sensor.spalnya_temp_humidity
+  - platform: smartir
+    name: Gost_Kondei
+    unique_id: Gost_Kondei
+    device_code: 1180
+    controller_data: remote.gost_remote
+    temperature_sensor: sensor.gost_temp_temperature
+    humidity_sensor: sensor.gost_temp_humidity
+  - platform: smartir
+    name: Spalnya_kondey
+    unique_id: Spalnya_kondey
+    device_code: 1180
+    controller_data: remote.rmpro
+    temperature_sensor: sensor.gost_temp_temperature
+    humidity_sensor: sensor.gost_temp_humidity
+    
+sensor:
+  - platform: systemmonitor
+    resources:
+      - type: processor_use
+      - type: processor_temperature
+      - type: memory_use_percent
+      - type: disk_use_percent
+        arg: /
+      - type: disk_free
+        arg: /
+      - type: last_boot
+      - type: load_15m
+      
+  - platform: time_date
+    display_options:
+      - 'date'
+      
+panel_custom:
+  - name: server_state
+    sidebar_title: 'Система'
+    sidebar_icon: mdi:server-security
+    js_url: /api/hassio/app/entrypoint.js
+    url_path: 'hassio/system'
+    embed_iframe: true
+    config:
+        ingress: core_configurator
+        
+fan:
+  - platform: xiaomi_miio_airpurifier
+    name: Xiaomi Air Fresh
+    host: 192.168.88.250
+    token: 32b1bd5e44229b436b3321bd970bc9b4
+    model: zhimi.airfresh.va4
+    
+logger:
+  default: warning
+  logs:
+    custom_components.localtuya: debug
+    custom_components.localtuya.pytuya: debug

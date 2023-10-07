@@ -1,0 +1,205 @@
+Title: Object 307
+views:
+  - title: Home
+    'icon:': mdi:access-point
+    cards:
+      - type: markdown
+        content: |
+          **Текущее состояние**
+      - type: entities
+        entities:
+          - entity: switch.gostinaya_switch_left
+          - entity: light.lamp_gostinnaya
+          - entity: light.lamp_gostinnaya_ambilight
+          - entity: switch.kuhnya_swich_left
+          - entity: light.lamp_moika
+          - entity: switch.kuhnya_swich_right
+          - entity: light.lamp_obed
+          - entity: switch.spalnya_switch_left
+          - entity: light.lamp_boris
+          - entity: light.lamp_lena
+          - entity: switch.vanna_switch_left
+          - entity: light.lamp_vanna
+          - entity: switch.toilet_switch
+          - entity: light.lamp_toilet_2
+          - entity: switch.koridor_switch_left
+          - entity: switch.koridor_switch_right
+          - entity: switch.balkon_switch
+        title: Свет
+        show_header_toggle: false
+        state_color: true
+      - show_current: true
+        show_forecast: false
+        type: weather-forecast
+        entity: weather.forecast_object_307
+      - type: thermostat
+        entity: climate.spalnya_battery
+        name: Спальня
+      - type: thermostat
+        entity: climate.gost_battery
+        name: Гостинная
+      - type: thermostat
+        entity: climate.kuhnya_battery
+        name: Кухня
+      - type: tile
+        entity: scene.all_svet_off
+      - type: tile
+        entity: scene.vann_film
+      - type: media-control
+        entity: media_player.android_tv_192_168_88_207
+      - type: custom:vacuum-card
+        entity: vacuum.ijai_v18_73a9_robot_cleaner
+        image: default
+  - title: Климат
+    path: r
+    badges: []
+    cards:
+      - type: custom:mini-graph-card
+        entities:
+          - sensor.zhimi_va4_b644_co2_density
+        name: CO2 в Спальне
+        hours_to_show: 12
+        points_per_hour: 10
+        align_icon: left
+        align_state: right
+        show:
+          icon: false
+          labels: true
+        color_thresholds:
+          - value: 600
+            color: green
+          - value: 750
+            color: yelow
+          - value: 1000
+            color: red
+      - type: entities
+        entities:
+          - entity: fan.zhimi_va4_b644_air_fresh
+            name: Бризер
+            secondary_info: last-changed
+          - entity: switch.zhimi_va4_b644_heater
+            name: Обогрев бризера
+          - entity: sensor.zhimi_va4_b644_air_quality_index
+            name: PM2.5 в спальне
+          - entity: sensor.spalnya_temp_pressure
+            name: Давление дома
+            secondary_info: none
+        show_header_toggle: false
+        title: Бризер в спальне
+        state_color: true
+      - type: custom:mini-graph-card
+        entities:
+          - sensor.spalnya_temp_temperature
+        name: Температура в Спальне
+        hours_to_show: 24
+        points_per_hour: 8
+        align_icon: left
+        align_state: right
+        show:
+          icon: false
+          labels: true
+        color_thresholds:
+          - value: 20
+            color: blue
+          - value: 21
+            color: '#f39c12'
+          - value: 24,5
+            color: '#d35400'
+          - value: 26
+            color: '#c0392b'
+      - type: thermostat
+        entity: climate.kondei_spanya_2
+        name: Кондиционер в Спальне
+      - type: custom:mini-graph-card
+        entities:
+          - sensor.spalnya_temp_humidity
+        name: Влажность в Спальне
+        hours_to_show: 8
+        points_per_hour: 8
+        align_icon: left
+        align_state: right
+        show:
+          icon: false
+          labels: true
+      - type: entities
+        entities:
+          - entity: weather.openweathermap
+            secondary_info: last-changed
+            name: Температура на улице
+          - entity: sensor.openweathermap_feels_like_temperature
+            name: Температура ощущается
+            secondary_info: last-changed
+          - entity: sensor.sun_next_setting
+            secondary_info: none
+            name: Закат солнца
+          - entity: sensor.openweathermap_forecast_precipitation
+            name: Прогноза осадков
+            secondary_info: none
+        show_header_toggle: false
+        title: Погода на улице
+      - type: custom:mini-graph-card
+        entities:
+          - sensor.gost_temp_temperature
+        name: Температура в Гостинной
+        hours_to_show: 24
+        points_per_hour: 8
+        align_icon: left
+        align_state: right
+        show:
+          icon: false
+          labels: true
+        color_thresholds:
+          - value: 20
+            color: blue
+          - value: 22
+            color: '#f39c12'
+          - value: 24,5
+            color: '#d35400'
+          - value: 26
+            color: '#c0392b'
+      - type: custom:mini-graph-card
+        entities:
+          - sensor.gost_temp_humidity
+        name: Влажность в Гостинной
+        hours_to_show: 8
+        points_per_hour: 8
+        align_icon: left
+        align_state: right
+        show:
+          icon: false
+          labels: true
+      - type: thermostat
+        entity: climate.gost_kondei_3
+        name: Кондиционер в Гостиной
+      - type: thermostat
+        entity: climate.kuhnya_battery
+        name: Кухня Батарея
+      - type: thermostat
+        entity: climate.toilet_teply_pol
+        name: Туалет Теплый пол
+      - type: thermostat
+        entity: climate.0xa4c13801bf778bad
+        name: Балкон Теплый пол
+      - type: thermostat
+        entity: climate.vanna_teply_pol
+        name: Ванна Теплый пол
+  - title: Сервер
+    cards:
+      - type: horizontal-stack
+        cards:
+          - type: gauge
+            name: Загрузка CPU
+            Unit: '%'
+            entity: sensor.processor_use
+            severity:
+              green: 0
+              Yellow: 60
+              red: 85
+          - type: gauge
+            name: Загрузка RAM
+            Unit: '%'
+            entity: sensor.memory_use_percent
+            severity:
+              green: 0
+              Yellow: 60
+              red: 85
