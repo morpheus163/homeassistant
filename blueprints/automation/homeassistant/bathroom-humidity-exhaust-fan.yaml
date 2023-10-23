@@ -1,0 +1,2814 @@
+blueprint:
+  name: Bathroom Humidity Exhaust Fan
+  description: >
+    # Bathroom Humidity Exhaust Fan
+    
+    **Version: 2.2**
+    
+    
+    The most common automation used for a bathroom humidity exhaust fan.
+    
+    
+    Let us know what you think of this blueprint and for community support including updates: [Click Here](https://community.home-assistant.io/t/bathroom-humidity-exhaust-fan/509992)
+    
+    
+    **The Automation Process:**
+      - When the humidity rises above a set percentage value over a time window the fan will turn ON. You also have the option to set a maximum humidity % that will also turn the fan ON.
+      - When the humidity falls below a set percentage value over a time window the automation will then wait for the time delay and then turn the fan OFF.
+      - Works with multi speed fan by using the "Fan Speed Options". You can select to stage your fan before turning OFF (High / Low / OFF), or you can just turn it OFF (ON / OFF).
+      - You have the option to set a "Winter Mode". This allows you to have different settings for the colder months of the year. 
+      - You have the option to turn ON lights and use the "Light Control" option. This allows you to set a brightness level, colour temperature in kelvin and a transition time for your lights.
+      - You have the option to use a manual fan switch. This allows you to turn ON and OFF the fan manually and still allows the automation to be triggered. You also have an auto OFF option so it can work like a run on timer.
+      - You have the option to use the "Automation Link Option". This disables other automations via a By-pass control option when the automation is activated. It is designed to work with my other blueprints. Example, my [sensor Light](https://community.home-assistant.io/t/481048) blueprint.
+      - You have the option to use a By-pass. This allows you to add a switch to manually By-pass the "Humidity Derivative Sensor".
+      - You have a safe guard to set the maximum run time for the fan.
+      - Safe guard built in for HA restart.
+      - Works with my Blueprint Add ON [Click Here](https://community.home-assistant.io/t/591824)
+    
+    Note: You must set up a "Derivative Sensor Helper" for this automation to work. See our FAQ on how to set this up correctly.
+    
+    
+    Required = *
+    
+    Need help? See our FAQ: [Click Here](https://community.home-assistant.io/t/bathroom-humidity-exhaust-fan/509992/2?u=blacky)
+    
+    
+    **If you like my blueprints, and would like to show your support or just say thank you?** [Click Here](https://www.paypal.com/donate/?hosted_button_id=WAZS3QSDTPGA8) 🙂
+  domain: automation
+  input:
+    trigger:
+      name: Humidity Derivative Sensor - Trigger *
+      description: Select your humidity derivative sensor.
+      selector:
+        entity:
+          filter:
+            domain:
+              - sensor
+    fan_switch:
+      name: Fan Switch *
+      description: Select the fan you would like to turn ON. Fans, switches & scripts are allowed.
+        If you would like to turn on lights, see below.
+        
+        
+        **NOTE** - If only selecting a script, it is recommended to enter in a dummy toggle helper to help the automation function correctly. 
+        For more information [Click Here](https://community.home-assistant.io/t/509992/239?u=blacky).
+      selector:
+        target:
+          entity:
+            domain:
+              - fan
+              - switch
+              - script
+              - input_boolean
+    fan_speed_low:
+      name: Input - Fan Speed - Low Speed Switch (Optional)
+      description: Select the entity that will turn the fan ON to low speed.
+        Please DO NOT select the same entities that are selected above in "Fan Switch" or below in "Fan Speed - Switch Off" here, as the automation will not work.
+        This will be the low speed switch if you have chosen to use "The Fan Speed Options" below.
+        
+        
+        **NOTE** - If only selecting a script, it is recommended to enter in a dummy toggle helper to help the automation function correctly. 
+        For more information [Click Here](https://community.home-assistant.io/t/509992/239?u=blacky).
+      default: []
+      selector:
+        entity:
+          multiple: true
+          filter:
+            domain:
+              - fan
+              - switch
+              - script
+              - input_boolean
+    fan_speed_off:
+      name: Input - Fan Speed - Switch Off (Optional)
+      description: Select the entity that will turn the fan OFF.
+        Please DO NOT select the same entities that are selected above in "Fan Switch" or "Fan Speed - Low Speed Switch"  here, as the automation will not work.
+        This will be the OFF switch if you have chosen to use "The Fan Speed Options" below.
+      default: []
+      selector:
+        entity:
+          multiple: true
+          filter:
+            domain:
+              - fan
+              - switch
+              - script
+              - input_boolean
+    bathroom_humidity_sensor:
+      name: Input - Bathroom Humidity Sensor (Optional)
+      description: Select your bathroom humidity sensor.
+        This will be the reference sensor if you have chosen to use "The Maximum Humidity Option" below.
+      default: []
+      selector:
+        entity:
+          filter:
+            domain:
+              - sensor
+    rising_humidity:
+      name: Rising Humidity
+      description: Set the percentage the humidity must rise within the derivative sensor time window to turn the fan ON.
+      default: 1
+      selector:
+        number:
+          min: 0
+          max: 5
+          step: 0.1
+          unit_of_measurement: '%'
+    falling_humidity:
+      name: Falling Humidity
+      description: Set the percentage the humidity must fall within the derivative sensor time window to turn the fan OFF.
+      default: -1
+      selector:
+        number:
+          min: -5
+          max: 0
+          step: 0.1
+          unit_of_measurement: '%'
+    time_delay:
+      name: Time Delay
+      description: Set the time delay to wait before turning the fan OFF after the falling humidity % has been achieved or the safe guards set time has passed.
+        When selecting the "Fan Speed - Switch to low speed then turn off" option below, this will be the time delay to wait before turning the fan onto low speed.
+      default: 10
+      selector:
+        number:
+          min: 0
+          max: 20
+          step: 0.5
+          unit_of_measurement: minutes
+    time_out:
+      name: Safe Guard - Maximum Run Time
+      description: Set the safe guard time. If the fan gets turned ON by the automation and the falling humidity fails to execute, then 
+        the safe guard will by-pass the falling humidity after its maximum run time and proceed to the time delay.
+      default: 20
+      selector:
+        number:
+          min: 5
+          max: 60
+          step: 0.5
+          unit_of_measurement: minutes
+    include_max_humidity:
+      name: Use The Maximum Humidity Option (Optional)
+      description: Sometimes after a shower the humidity can take longer to fall back to its normal level. 
+        This can cause a lower rising % when having another shower before the humidity has time to return to its normal level, thus not triggering the automation.
+        Enabling this option will allow the fan to be turned ON when the humidity rises above the set value.
+
+
+        **NOTE** - You must input your "Bathroom Humidity Sensor" above for this option to work.
+      default: maximum_humidity_disabled
+      selector:
+        select:
+          options:
+            - label: Enable the maximum humidity option
+              value: "maximum_humidity_enabled"
+            - label: Disable the maximum humidity option
+              value: "maximum_humidity_disabled"
+    max_humidity:
+      name: Maximum Humidity
+      description: Set the maximum humidity. When using this option, it is recommended to set this value as high as possible to stop false triggers.
+      default: 100
+      selector:
+        number:
+          min: 95
+          max: 100
+          step: 0.5
+          unit_of_measurement: '%'
+    include_fan_speed:
+      name: Use The Fan Speed Options (Optional)
+      description: When using a fan with multiple speeds, sometimes you need to select different entities to turn ON low speed and to turn the fan OFF. 
+        If this is the case then please select an option you would like to use.
+
+
+        **NOTE** - You must input your "Fan Speeds" entities above for this option to work.
+      default: fan_speed_disabled
+      selector:
+        select:
+          options:
+            - label: Enable the fan speed - switch to low speed then turn off option 
+              value: "fan_low_speed_enabled"
+            - label: Enable the fan speed - turn off option
+              value: "fan_speed_off_enabled"
+            - label: Disable the fan speed options
+              value: "fan_speed_disabled"
+    time_delay_low_speed:
+      name: Fan Speed - Low Speed Time Delay
+      description: If you have selected to use the "Enable the fan speed - switch to low speed then turn off" option above, then please set the low speed time delay.
+        This is an additional time delay to run the fan on low speed before turning the fan OFF.
+      default: 5
+      selector:
+        number:
+          min: 0
+          max: 20
+          step: 0.5
+          unit_of_measurement: minutes
+    include_winter_mode:
+      name: Use The Winter Mode Option (Optional)
+      description: Sometimes you need to apply different settings to the colder months of the year.
+        Enabling this option will allow you to apply a "Winter Mode" automatically to the months you select below.
+      default: winter_mode_disabled
+      selector:
+        select:
+          options:
+            - label: Enable winter mode option
+              value: "winter_mode_enabled"
+            - label: Disable winter mode option
+              value: "winter_mode_disabled"
+    month_winter_mode:
+      name: Months For Winter Mode
+      description: Select the months to apply the winter mode settings to. 
+      default: []
+      selector:
+        select:
+          multiple: true
+          mode: list
+          options:
+            - label: January
+              value: "1"
+            - label: February
+              value: "2"
+            - label: March
+              value: "3"
+            - label: April
+              value: "4"
+            - label: May
+              value: "5"
+            - label: June
+              value: "6"
+            - label: July
+              value: "7"
+            - label: August
+              value: "8"
+            - label: September
+              value: "9"
+            - label: October
+              value: "10"
+            - label: November
+              value: "11"
+            - label: December
+              value: "12"
+    winter_rising_humidity:
+      name: Winter Rising Humidity
+      description: Set the percentage the humidity must rise within the derivative sensor time window to turn the fan ON.
+      default: 1
+      selector:
+        number:
+          min: 0
+          max: 5
+          step: 0.1
+          unit_of_measurement: '%'
+    winter_falling_humidity:
+      name: Winter Falling Humidity
+      description: Set the percentage the humidity must fall within the derivative sensor time window to turn the fan OFF.
+      default: -1
+      selector:
+        number:
+          min: -5
+          max: 0
+          step: 0.1
+          unit_of_measurement: '%'
+    winter_time_delay:
+      name: Winter Time Delay
+      description: Set the time delay to wait before turning the fan OFF after the falling humidity % has been achieved or the safe guards set time has passed.
+        When selecting the "Fan Speed - Switch to low speed then turn off" option below, this will be the time delay to wait before turning the fan onto low speed.
+      default: 10
+      selector:
+        number:
+          min: 0
+          max: 20
+          step: 0.5
+          unit_of_measurement: minutes
+    winter_time_out:
+      name: Winter Safe Guard - Maximum Run Time
+      description: Set the safe guard time. If the fan gets turned ON by the automation and the falling humidity fails to execute, then 
+        the safe guard will by-pass the falling humidity after its maximum run time and proceed to the time delay.
+      default: 20
+      selector:
+        number:
+          min: 5
+          max: 60
+          step: 0.5
+          unit_of_measurement: minutes
+    winter_include_max_humidity:
+      name: Winter - Use The Maximum Humidity Option (Optional)
+      description: Sometimes in winter (colder months) after a shower the humidity can take longer to fall back to its normal level. 
+        This can cause a lower rising % when having another shower before the humidity has time to return to its normal level, thus not triggering the automation.
+        Enabling this option will allow the fan to be turned ON when the humidity rises above the set value.
+        
+        
+        **NOTE** - You must input your "Bathroom Humidity Sensor" above for this option to work.
+      default: maximum_humidity_disabled
+      selector:
+        select:
+          options:
+            - label: Enable the maximum humidity option
+              value: "maximum_humidity_enabled"
+            - label: Disable the maximum humidity option
+              value: "maximum_humidity_disabled"
+    winter_max_humidity:
+      name: Winter Maximum Humidity
+      description: Set the maximum humidity. When using this option, it is recommended to set this value as high as possible to stop false triggers.
+      default: 100
+      selector:
+        number:
+          min: 95
+          max: 100
+          step: 0.5
+          unit_of_measurement: '%'
+    winter_include_fan_speed:
+      name: Winter - Use The Fan Speed Options (Optional)
+      description: When using a fan with multiple speeds, sometimes you need to select different entities to turn ON low speed and to turn the fan OFF. 
+        If this is the case then please select an option you would like to use
+
+
+        **NOTE** - You must input your "Fan Speeds" entities above for this option to work.
+      default: fan_speed_disabled
+      selector:
+        select:
+          options:
+            - label: Enable the fan speed - switch to low speed then turn off option 
+              value: "fan_low_speed_enabled"
+            - label: Enable the fan speed - turn off option
+              value: "fan_speed_off_enabled"
+            - label: Disable the fan speed options
+              value: "fan_speed_disabled"
+    winter_time_delay_low_speed:
+      name: Winter Fan Speed - Low Speed Time Delay
+      description: If you have selected to use the "Enable the fan speed - switch to low speed then turn off" option above, then please set the low speed time delay.
+        This is an additional time delay to run the fan on low speed before turning the fan OFF.
+      default: 5
+      selector:
+        number:
+          min: 0
+          max: 20
+          step: 0.5
+          unit_of_measurement: minutes
+    include_lights:
+      name: Use The Lights Options (Optional)
+      description: This is useful for turning on different lights when having a shower. 
+        It is normally used when you have LED lights in a shower niche.
+        If you would like more lighting options, consider using my [sensor Light](https://community.home-assistant.io/t/481048) blueprint.
+      default: lights_disabled
+      selector:
+        select:
+          options:
+            - label: Enable the lights options
+              value: "lights_enabled"
+            - label: Disable the lights options
+              value: "lights_disabled"
+    light_switch:
+      name: Lights
+      description: The lights that get turned on by the trigger sensor.
+        
+        
+        **NOTE** - You can only use light entities. Areas and devices are not supported.
+      default: {}
+      selector:
+        target:
+          entity:
+            domain: 
+              - light
+    light_time_delay:
+      name: Lights - Time Delay
+      description: Set the time delay to wait before turning the lights OFF after the falling humidity % has been achieved or the safe guards set time has passed.
+      default: 10
+      selector:
+        number:
+          min: 0
+          max: 40
+          step: 0.5
+          unit_of_measurement: minutes
+    include_light_control:
+      name: Use The Light Control Options (Optional)
+      description: Select any option you would like to use. It will only control a "light" entity that supports each option you select.
+        The settings are below for each option.
+      default: []
+      selector:
+        select:
+          multiple: true
+          options:
+            - label: Use brightness
+              value: "use_brightness"
+            - label: Use colour temperature
+              value: "use_colour_temperature"
+            - label: Use transition
+              value: "use_transition"
+    light_brightness:
+      name: Brightness
+      description: The brightness setting for the lights when they are turned ON.
+      default: 100
+      selector:
+        number:
+          min: 1
+          max: 100
+          mode: slider
+          step: 1
+          unit_of_measurement: '%'
+    light_colour_temperature:
+      name: Colour Temperature
+      description: The colour temperature setting for the lights when they are turned ON.
+      default: 5000
+      selector:
+        number:
+          min: 2000
+          max: 8000
+          mode: slider
+          step: 100
+          unit_of_measurement: 'kelvin'
+    light_transition_on:
+      name: Transition - ON
+      description: The transition setting for the lights when they are turned ON.
+      default: 1
+      selector:
+        number:
+          min: 0
+          max: 5
+          mode: slider
+          step: 0.5
+          unit_of_measurement: seconds
+    light_transition_off:
+      name: Transition - OFF
+      description: The transition setting for the lights when they are turned OFF.
+      default: 1
+      selector:
+        number:
+          min: 0
+          max: 30
+          mode: slider
+          step: 1
+          unit_of_measurement: seconds
+    include_manual_fan_switch:
+      name: Use The Manual Fan Switch Option (Optional)
+      description: This allows you to add a switch to turn the fan ON and OFF manually and still allows the automation to be triggered, taking control of your fan.
+        This is useful in removing any unwanted fumes from deodorant, hairspray, toilet etc. The auto off time delay in option 2 makes sure you never forget to turn the fan OFF.
+        
+        
+        **NOTE** - The switch can not be connected to your fan (Actual fan switch). It must be a totally independent switch or the automation will not work.
+      default: disable_manual_fan_switch
+      selector:
+        select:
+          options:
+            - label: 1 - Enable manual fan switch option
+              value: "enable_manual_fan_switch"
+            - label: 2 - Enable manual fan switch + auto off option
+              value: "enable_manual_fan_switch_auto_off"
+            - label: Disable manual fan switch
+              value: "disable_manual_fan_switch"
+    manual_fan_switch:
+      name: Manual Fan Switch
+      description: Enter a switch that will turn ON / OFF the fan. When it turns the fan OFF, it will aslo turn OFF the automation link and any lights if the option is enabled.
+      default: []
+      selector:
+        entity:
+          multiple: true
+          filter:
+            domain:
+              - switch
+              - binary_sensor
+              - input_boolean
+    manual_fan_switch_time_delay:
+      name: Manual Fan Switch Auto OFF - Time Delay
+      description: If you have enabled option 2 above, then set the auto OFF time delay.
+      default: 10
+      selector:
+        number:
+          min: 0
+          max: 40
+          step: 0.5
+          unit_of_measurement: minutes
+    include_automation_link:
+      name: Use The Automation Link Option (Optional)
+      description: This allows you to link your other automations so they will be automatically disabled.
+        This is useful if you are using one of my other blueprints to control the lights, switches and or scenes in your bathroom and you would like to disable it when this automation is ON.
+        It allows you to keep the bathroom lights ON when you are in the shower and your motion sensor is unable to detect motion.
+        
+        
+        For more information on the Automation Link Option [Click Here](https://community.home-assistant.io/t/509992/240?u=blacky)
+      default: disable_automation_link
+      selector:
+        select:
+          options:
+            - label: Enable automation link
+              value: "enable_automation_link"
+            - label: Disable automation link
+              value: "disable_automation_link"
+    automation_link:
+      name: Automation Link - By-pass Control
+      description: Enter the other automations you would like to disable when this automation is ON.
+        To do this your other automations must include a by-pass switch that you enter here.
+      default: []
+      selector:
+        entity:
+          multiple: true
+          filter:
+            domain:
+              - input_boolean
+    automation_link_time_delay:
+      name: Automation Link - Time Delay
+      description: Set the time delay to wait before turning the automation link OFF after the falling humidity % has been achieved or the safe guards set time has passed.
+      default: 10
+      selector:
+        number:
+          min: 0
+          max: 40
+          step: 0.5
+          unit_of_measurement: minutes
+    include_bypass:
+      name: Use The Trigger Sensor By-pass Option (Optional)
+      description: Select enable or disable. All of the three enable options will allow manual control of your fans.
+        The three enable options are only for selecting what should happen when you turn the by-pass ON. 
+      default: bypass_disabled
+      selector:
+        select:
+          options:
+            - label: 1 - Enable the By-pass - Turn the fan and enabled options ON
+              value: "bypass_enabled_turn_on"
+            - label: 2 - Enable the By-pass - Turn the fan and enabled options OFF
+              value: "bypass_enabled"
+            - label: 3 - Enable the By-pass - Keep the current fan and enabled options state
+              value: "bypass_enabled_stop"
+            - label: Disable the By-pass option
+              value: "bypass_disabled"
+    by_pass:
+      name: Humidity Derivative Sensor By-pass
+      description: Select a switch that will By-pass the humidity derivative sensor and make your fan function as normal. 
+        The entity cannot be included in, "Fan Switch" and or in the "Input - Fan Speed" selections.
+      default: []
+      selector:
+        entity:
+    bypass_options:
+      name: By-pass Options
+      description: Select what extra option you would like. 
+      default: []
+      selector:
+        select:
+          multiple: true
+          options:
+            - label: When you turn the by-pass off - Turn the fan and enabled options OFF and do not run the automation.
+              value: "bypass_turn_fan_off"
+    include_bypass_auto_off:
+      name: Use The By-pass Auto OFF Option (Optional)
+      description: This is used when you turn the by-pass ON and you would like the by-pass to automatically turn OFF in a set time delay. 
+        It can also be used as a timer to turn the fan ON and then OFF if you have chosen to use "Enable the By-pass - Turn fan ON" above.
+      default: bypass_auto_off_disabled
+      selector:
+        select:
+          options:
+            - label: Enable the by-pass auto off option
+              value: "bypass_auto_off_enabled"
+            - label: Disable the by-pass auto off option
+              value: "bypass_auto_off_disabled"
+    bypass_auto_off_delay:
+      name: By-pass Auto OFF - Time Delay
+      description: Set the by-pass auto OFF time delay. 
+      default: 60
+      selector:
+        number:
+          min: 1
+          max: 240
+          step: 1
+          unit_of_measurement: minutes
+
+mode: restart
+max_exceeded: silent
+
+variables:
+  trigger: !input trigger
+  fan_switch: !input fan_switch
+  fan_speed_low: !input fan_speed_low
+  fan_speed_off: !input fan_speed_off
+  bathroom_humidity_sensor: !input bathroom_humidity_sensor
+  rising_humidity: !input rising_humidity
+  falling_humidity: !input falling_humidity
+  time_delay: !input time_delay
+  time_out: !input time_out
+  include_max_humidity: !input include_max_humidity
+  max_humidity: !input max_humidity
+  include_fan_speed: !input include_fan_speed
+  time_delay_low_speed: !input time_delay_low_speed
+  include_winter_mode: !input include_winter_mode
+  month_winter_mode:  !input month_winter_mode
+  winter_rising_humidity: !input winter_rising_humidity
+  winter_falling_humidity: !input winter_falling_humidity
+  winter_time_delay: !input winter_time_delay
+  winter_time_out: !input winter_time_out
+  winter_include_max_humidity: !input winter_include_max_humidity
+  winter_max_humidity: !input winter_max_humidity
+  winter_include_fan_speed: !input winter_include_fan_speed
+  winter_time_delay_low_speed: !input winter_time_delay_low_speed
+  include_lights: !input include_lights
+  light_switch: !input light_switch
+  light_time_delay: !input light_time_delay
+  include_light_control: !input include_light_control
+  light_brightness: !input light_brightness
+  brightness_value: "{{ iif ('use_brightness' in include_light_control , light_brightness, ) }}"
+  light_colour_temperature: !input light_colour_temperature
+  temperature_value: "{{ iif ('use_colour_temperature' in include_light_control , light_colour_temperature, [] ) }}"
+  light_transition_on: !input light_transition_on
+  light_transition_off: !input light_transition_off
+  transition_on_value: "{{ iif ('use_transition' in include_light_control, light_transition_on, ) }}"
+  transition_off_value: "{{ iif ('use_transition' in include_light_control, light_transition_off, ) }}"
+  include_manual_fan_switch: !input include_manual_fan_switch
+  manual_fan_switch: !input manual_fan_switch
+  manual_fan_switch_time_delay: !input manual_fan_switch_time_delay
+  include_automation_link: !input include_automation_link
+  automation_link: !input automation_link
+  automation_link_time_delay: !input automation_link_time_delay
+  include_bypass: !input include_bypass
+  by_pass: !input by_pass
+  bypass_options: !input bypass_options
+  include_bypass_auto_off: !input include_bypass_auto_off
+  bypass_auto_off_delay: !input bypass_auto_off_delay
+
+# Split domains for light switch targets
+
+  light_entities: >-
+    {% set a =  light_switch and light_switch.entity_id %}
+    {% if a %}
+      {{ expand(a) | selectattr('domain', 'eq', 'light') | map(attribute='entity_id') | list }}
+    {% else %}
+      []
+    {% endif %}
+
+trigger:
+  - platform: numeric_state
+    id: "t0"
+    entity_id: !input trigger
+    above: !input winter_rising_humidity
+    below: "100"
+  - platform: numeric_state
+    id: "t1"
+    entity_id: !input bathroom_humidity_sensor
+    above: !input winter_max_humidity
+    below: "100"
+  - platform: homeassistant
+    id: "t2"
+    event: start
+  - platform: numeric_state
+    id: "t3"
+    entity_id: !input trigger
+    above: !input rising_humidity
+    below: "100"
+  - platform: numeric_state
+    id: "t4"
+    entity_id: !input bathroom_humidity_sensor
+    above: !input max_humidity
+    below: "100"
+  - platform: state
+    id: "t5"
+    entity_id: !input by_pass
+    from: "off"
+    to: "on"
+  - platform: state
+    id: "t6"
+    entity_id: !input by_pass
+    from: "on"
+    to: "off"
+  - platform: state
+    id: "t7"
+    entity_id: !input manual_fan_switch
+    from: "off"
+    to: "on"
+
+# All Conditions
+condition:
+
+# Trigger conditions
+  - condition: or
+    conditions:
+      - condition: and # trigger for winter mode
+        conditions:
+          -  "{{ include_winter_mode == 'winter_mode_enabled' }}"
+          - condition: template
+            value_template: "{{ (now().month | string in month_winter_mode ) }}"
+          - condition: trigger
+            id: 't0'
+      - condition: and # trigger for winter mode and max humidity
+        conditions:
+          - "{{ (include_winter_mode == 'winter_mode_enabled') and (winter_include_max_humidity == 'maximum_humidity_enabled') }}"
+          - condition: template
+            value_template: "{{ (now().month | string in month_winter_mode ) }}"
+          - condition: trigger
+            id: 't1'
+      - condition: and # trigger by HA restart - fan or low speed fan is on
+        conditions:
+          - "{{ (expand(fan_switch.entity_id) | selectattr('state', '==', 'on') | list | count > 0) or ((include_fan_speed == 'fan_low_speed_enabled') and (expand(fan_speed_low) | selectattr('state', '==', 'on') | list | count > 0)) or ((winter_include_fan_speed == 'fan_low_speed_enabled') and (expand(fan_speed_low) | selectattr('state', '==', 'on') | list | count > 0)) or ((include_automation_link == 'enable_automation_link') and (expand(automation_link) | selectattr('state', '==', 'on') | list | count > 0)) }}"
+          - condition: trigger
+            id: 't2'
+      - condition: and # trigger by HA restart - above rising humidity - winter mode disabled
+        conditions:
+          - condition: trigger
+            id: 
+              - 't2'
+          - "{{ 'winter_mode_disabled' in include_winter_mode }}"
+          - condition: numeric_state
+            entity_id: !input trigger
+            above: !input rising_humidity
+            below: "100"
+      - condition: and # trigger by HA restart - above rising humidity - winter mode enabled - not in winter month
+        conditions:
+          - condition: trigger
+            id: 
+              - 't2'
+          - "{{ 'winter_mode_enabled' in include_winter_mode }}"
+          - condition: template
+            value_template: "{{ (now().month | string not in month_winter_mode ) }}"
+          - condition: numeric_state
+            entity_id: !input trigger
+            above: !input rising_humidity
+            below: "100"
+      - condition: and # trigger by HA restart - above rising humidity - winter mode enabled - in winter month 
+        conditions:
+          - condition: trigger
+            id: 
+              - 't2'
+          - "{{ 'winter_mode_enabled' in include_winter_mode }}"
+          - condition: template
+            value_template: "{{ (now().month | string in month_winter_mode ) }}"
+          - condition: numeric_state
+            entity_id: !input trigger
+            above: !input winter_rising_humidity
+            below: "100"
+      - condition: and # trigger by HA restart - maximum humidity enabled & above maximum humidity - winter mode disabled
+        conditions:
+          - condition: trigger
+            id: 
+              - 't2'
+          - "{{ 'winter_mode_disabled' in include_winter_mode }}"
+          - "{{ 'maximum_humidity_enabled' in include_max_humidity }}"
+          - condition: numeric_state
+            entity_id: !input bathroom_humidity_sensor
+            above: !input max_humidity
+            below: "100"
+      - condition: and # trigger by HA restart - maximum humidity enabled & above maximum humidity - winter mode enabled - not in winter month
+        conditions:
+          - condition: trigger
+            id: 
+              - 't2'
+          - "{{ 'winter_mode_enabled' in include_winter_mode }}"
+          - "{{ 'maximum_humidity_enabled' in include_max_humidity }}"
+          - condition: template
+            value_template: "{{ (now().month | string not in month_winter_mode ) }}"
+          - condition: numeric_state
+            entity_id: !input bathroom_humidity_sensor
+            above: !input max_humidity
+            below: "100"
+      - condition: and # trigger by HA restart - maximum humidity enabled & above maximum humidity - winter mode enabled - in winter month 
+        conditions:
+          - condition: trigger
+            id: 
+              - 't2'
+          - "{{ 'winter_mode_enabled' in include_winter_mode }}"
+          - "{{ 'maximum_humidity_enabled' in winter_include_max_humidity }}"
+          - condition: template
+            value_template: "{{ (now().month | string in month_winter_mode ) }}"
+          - condition: numeric_state
+            entity_id: !input bathroom_humidity_sensor
+            above: !input winter_max_humidity
+            below: "100"
+      - condition: and # trigger for default
+        conditions:
+          - condition: template
+            value_template: "{{ (include_winter_mode == 'winter_mode_disabled') or ((include_winter_mode == 'winter_mode_enabled') and not (now().month | string in month_winter_mode )) }}"
+          - condition: trigger
+            id: 't3'
+      - condition: and # trigger for default and max humidity
+        conditions:
+          - condition: template
+            value_template: "{{ ((include_winter_mode == 'winter_mode_disabled') and (include_max_humidity == 'maximum_humidity_enabled')) or ((include_winter_mode == 'winter_mode_enabled') and (include_max_humidity == 'maximum_humidity_enabled') and not (now().month | string in month_winter_mode )) }}"
+          - condition: trigger
+            id: 't4'
+      - condition: and # trigger by by-pass turning on
+        conditions:
+          - condition: trigger
+            id: 't5'
+          - "{{ (include_bypass == 'bypass_enabled_turn_on') or (include_bypass == 'bypass_enabled') or (include_bypass == 'bypass_enabled_stop') }}"
+      - condition: and # trigger by by-pass turning off
+        conditions:
+          - condition: trigger
+            id: 't6'
+          - "{{ (include_bypass == 'bypass_enabled') or (include_bypass == 'bypass_enabled_stop') or (include_bypass == 'bypass_enabled_turn_on') }}"
+          - "{{ (expand(fan_switch.entity_id) | selectattr('state', '==', 'on') | list | count > 0 ) or ((include_fan_speed == 'fan_low_speed_enabled') and (expand(fan_speed_low) | selectattr('state', '==', 'on') | list | count > 0)) or ((winter_include_fan_speed == 'fan_low_speed_enabled') and (expand(fan_speed_low) | selectattr('state', '==', 'on') | list | count > 0)) or ((include_lights == 'lights_enabled') and (expand(light_switch.entity_id) | selectattr('state', '==', 'on') | list | count > 0)) or ((include_automation_link == 'enable_automation_link') and (expand(automation_link) | selectattr('state', '==', 'on') | list | count > 0)) or ((include_manual_fan_switch == 'enable_manual_fan_switch') or (include_manual_fan_switch == 'enable_manual_fan_switch_auto_off') and (expand(manual_fan_switch) | selectattr('state', '==', 'on') | list | count > 0)) }}"
+      - condition: and # trigger by by-pass turning off - trigger above rising humidity - winter mode disabled - fans & lights off
+        conditions:
+          - condition: trigger
+            id: 
+              - 't6'
+          - "{{ 'winter_mode_disabled' in include_winter_mode }}"
+          - "{{ (expand(fan_switch.entity_id) | selectattr('state', '==', 'off') | list | count > 0 ) or ((include_fan_speed == 'fan_low_speed_enabled') and (expand(fan_speed_low) | selectattr('state', '==', 'off') | list | count > 0)) or ((include_lights == 'lights_enabled') and (expand(light_switch.entity_id) | selectattr('state', '==', 'off') | list | count > 0)) or ((include_automation_link == 'enable_automation_link') and (expand(automation_link) | selectattr('state', '==', 'on') | list | count > 0))}}"
+          - condition: numeric_state
+            entity_id: !input trigger
+            above: !input rising_humidity
+            below: "100"
+      - condition: and # trigger by by-pass turning off - trigger above rising humidity - winter mode enabled - not in winter month - fans & lights off
+        conditions:
+          - condition: trigger
+            id: 
+              - 't6'
+          - "{{ 'winter_mode_enabled' in include_winter_mode }}"
+          - "{{ (expand(fan_switch.entity_id) | selectattr('state', '==', 'off') | list | count > 0 ) or ((include_fan_speed == 'fan_low_speed_enabled') and (expand(fan_speed_low) | selectattr('state', '==', 'off') | list | count > 0)) or ((include_lights == 'lights_enabled') and (expand(light_switch.entity_id) | selectattr('state', '==', 'off') | list | count > 0)) or ((include_automation_link == 'enable_automation_link') and (expand(automation_link) | selectattr('state', '==', 'on') | list | count > 0)) }}"
+          - condition: template
+            value_template: "{{ (now().month | string not in month_winter_mode ) }}"
+          - condition: numeric_state
+            entity_id: !input trigger
+            above: !input rising_humidity
+            below: "100"
+      - condition: and # trigger by by-pass turning off - trigger above rising humidity - winter mode enabled - in winter month - fans & lights off 
+        conditions:
+          - condition: trigger
+            id: 
+              - 't6'
+          - "{{ 'winter_mode_enabled' in include_winter_mode }}"
+          - "{{ (expand(fan_switch.entity_id) | selectattr('state', '==', 'off') | list | count > 0 ) or ((winter_include_fan_speed == 'fan_low_speed_enabled') and (expand(fan_speed_low) | selectattr('state', '==', 'off') | list | count > 0)) or ((include_lights == 'lights_enabled') and (expand(light_switch.entity_id) | selectattr('state', '==', 'off') | list | count > 0)) or ((include_automation_link == 'enable_automation_link') and (expand(automation_link) | selectattr('state', '==', 'on') | list | count > 0)) }}"
+          - condition: template
+            value_template: "{{ (now().month | string in month_winter_mode ) }}"
+          - condition: numeric_state
+            entity_id: !input trigger
+            above: !input winter_rising_humidity
+            below: "100"
+      - condition: and # trigger by run on timer
+        conditions:
+          - condition: state
+            entity_id: !input manual_fan_switch
+            match: any
+            state: 'on'
+          - condition: trigger
+            id: 
+              - 't7'
+          - "{{ ('enable_manual_fan_switch' in include_manual_fan_switch) or ('enable_manual_fan_switch_auto_off' in include_manual_fan_switch) }}"
+
+# Check Humidity Derivative Sensor By-pass
+  - condition: or
+    conditions:
+      - "{{ include_bypass == 'bypass_disabled' }}"
+      - "{{ by_pass == [] }}"
+      - "{{ (include_bypass == 'bypass_enabled_turn_on') and (states[by_pass].state == 'off') }}"
+      - "{{ (include_bypass == 'bypass_enabled') and (states[by_pass].state == 'off') }}"
+      - "{{ (include_bypass == 'bypass_enabled_stop') and (states[by_pass].state == 'off') }}"
+      - "{{ (include_bypass_auto_off == 'bypass_auto_off_enabled') and (states[by_pass].state == 'off') }}"
+      - "{{ (include_bypass_auto_off == 'bypass_auto_off_enabled') and (states[by_pass].state == 'on') and (trigger.id == 't2') }}"
+      - condition: trigger
+        id: 't5'
+
+action:
+  - choose:
+      - alias: "For winter mode when enabled and within the set winter months"
+        conditions:
+          - condition: or
+            conditions:
+              - condition: and
+                conditions:
+                  - condition: trigger
+                    id:
+                      - 't0'
+                      - 't1'
+              - condition: and
+                conditions:
+                  -  "{{ include_winter_mode == 'winter_mode_enabled' }}"
+                  - condition: template
+                    value_template: "{{ (now().month | string in month_winter_mode ) }}"
+                  - condition: trigger
+                    id: 
+                      - 't2'
+                      - 't5'
+                      - 't6'
+                      - 't7'
+        sequence:
+          - choose:
+              - alias: "By-pass is turned on  & check by-pass option - turn fan off"
+                conditions:
+                  - condition: trigger
+                    id: 't5'
+                  - condition: template
+                    value_template: "{{ include_bypass == 'bypass_enabled' }}"
+                sequence:
+                  - choose:
+                    - alias: "Check if the run on timer is enabled and switch is on"
+                      conditions:
+                        - "{{ ('enable_manual_fan_switch' in include_manual_fan_switch) or ('enable_manual_fan_switch_auto_off' in include_manual_fan_switch) }}"
+                        - "{{ expand(manual_fan_switch) | selectattr('state', '==', 'on') | list | count > 0 }}"
+                      sequence:
+                        - alias: "Turn OFF run on timer switch"
+                          service: homeassistant.turn_off
+                          entity_id: !input manual_fan_switch
+                  - alias: "Parallel Actions for the fan and lights"
+                    parallel:
+                      - sequence:
+                          - alias: "Turn off the fan"
+                            service: homeassistant.turn_off
+                            target: !input fan_switch
+                          - choose:
+                            - alias: "Check if the fan speed switch to low speed then off option is enabled"
+                              conditions:
+                                -  "{{ winter_include_fan_speed == 'fan_low_speed_enabled' }}"
+                              sequence:
+                                - alias: "Fan low speed OFF - Safe Guard"
+                                  service: homeassistant.turn_off
+                                  entity_id: !input fan_speed_low
+                                - alias: "Fan off speed"
+                                  service: homeassistant.turn_on
+                                  entity_id: !input fan_speed_off
+                            - alias: "Check if the fan speed off option is enabled"
+                              conditions:
+                                -  "{{ winter_include_fan_speed == 'fan_speed_off_enabled' }}"
+                              sequence:
+                                - alias: "Fan off speed"
+                                  service: homeassistant.turn_on
+                                  entity_id: !input fan_speed_off
+                      - sequence:
+                          - choose:
+                            - alias: "Check if the lights are enabled"
+                              conditions:
+                                -  "{{ include_lights == 'lights_enabled' }}"
+                              sequence:
+                                - choose:
+                                  - alias: "If transition is selected"
+                                    conditions:
+                                      - condition: template
+                                        value_template: "{{ 'use_transition' in include_light_control }}"
+                                    sequence:
+                                      - alias: "Turn off the lights"
+                                        service: light.turn_off
+                                        target:
+                                          entity_id: "{{ light_entities }}"
+                                        data:
+                                          transition: "{{ transition_off_value }}"
+                                  - alias: "If transition is not selected"
+                                    conditions:
+                                      - condition: template
+                                        value_template: "{{ 'use_transition' not in include_light_control }}"
+                                    sequence:
+                                      - alias: "Turn off the lights"
+                                        service: light.turn_off
+                                        target:
+                                          entity_id: "{{ light_entities }}"
+                                - stop: "Stop the lights"
+                      - sequence:
+                          - choose:
+                            - alias: "Check if the automation link is enabled"
+                              conditions:
+                                -  "{{ include_automation_link == 'enable_automation_link' }}"
+                              sequence:
+                                - alias: "Turn off the automation link"
+                                  service: homeassistant.turn_off
+                                  target:
+                                    entity_id: !input automation_link
+                                - stop: "Stop the automation link"
+                  - alias: "Check by-pass settings and preform the correct action"
+                    if:
+                      - alias: "Check if the by-pass auto off is enabled"
+                        condition: template
+                        value_template: "{{ include_bypass_auto_off == 'bypass_auto_off_enabled' }}"
+                    then:
+                      - alias: "Wait the number of minutes set in the by-pass auto off time delay"
+                        delay: 
+                          minutes: !input bypass_auto_off_delay
+                      - alias: "Turn off the by-pass"
+                        service: homeassistant.turn_off
+                        entity_id: !input by_pass
+                  - stop: "Stop the automation"
+              - alias: "By-pass is turned on  & check by-pass option - keep the current fan state"
+                conditions:
+                  - condition: trigger
+                    id: 't5'
+                  - condition: template
+                    value_template: "{{ include_bypass == 'bypass_enabled_stop' }}"
+                sequence:
+                  - choose:
+                    - alias: "Check if the run on timer is enabled and switch is on"
+                      conditions:
+                        - "{{ ('enable_manual_fan_switch' in include_manual_fan_switch) or ('enable_manual_fan_switch_auto_off' in include_manual_fan_switch) }}"
+                        - "{{ expand(manual_fan_switch) | selectattr('state', '==', 'on') | list | count > 0 }}"
+                      sequence:
+                        - alias: "Turn OFF run on timer switch"
+                          service: homeassistant.turn_off
+                          entity_id: !input manual_fan_switch
+                  - alias: "Check by-pass settings and preform the correct action"
+                    if:
+                      - alias: "Check if the by-pass auto off is enabled"
+                        condition: template
+                        value_template: "{{ include_bypass_auto_off == 'bypass_auto_off_enabled' }}"
+                    then:
+                      - alias: "Wait the number of minutes set in the by-pass auto off time delay"
+                        delay: 
+                          minutes: !input bypass_auto_off_delay
+                      - alias: "Turn off the by-pass"
+                        service: homeassistant.turn_off
+                        entity_id: !input by_pass
+                      - stop: "Stop the automation"
+                    else:
+                      - stop: "Stop the automation"
+              - alias: "By-pass is turned off  & preform the correct action"
+                conditions:
+                  - condition: trigger
+                    id: 't6'
+                sequence:
+                  - choose:
+                    - alias: "Check if the run on timer is enabled and switch is on"
+                      conditions:
+                        - "{{ ('enable_manual_fan_switch' in include_manual_fan_switch) or ('enable_manual_fan_switch_auto_off' in include_manual_fan_switch) }}"
+                        - "{{ expand(manual_fan_switch) | selectattr('state', '==', 'on') | list | count > 0 }}"
+                      sequence:
+                        - alias: "Turn OFF run on timer switch"
+                          service: homeassistant.turn_off
+                          entity_id: !input manual_fan_switch
+                  - choose:
+                      - alias: "Check by-pass options - turn fan off is enabled"
+                        conditions:
+                          - condition: template
+                            value_template: "{{ 'bypass_turn_fan_off' in bypass_options }}"
+                        sequence:
+                          - alias: "Parallel Actions for the fan and lights"
+                            parallel:
+                              - sequence:
+                                  - alias: "Turn off the fan"
+                                    service: homeassistant.turn_off
+                                    target: !input fan_switch
+                                  - choose:
+                                    - alias: "Check if the fan speed switch to low speed then off option is enabled"
+                                      conditions:
+                                        -  "{{ winter_include_fan_speed == 'fan_low_speed_enabled' }}"
+                                      sequence:
+                                        - alias: "Fan low speed OFF - Safe Guard"
+                                          service: homeassistant.turn_off
+                                          entity_id: !input fan_speed_low
+                                        - alias: "Fan off speed"
+                                          service: homeassistant.turn_on
+                                          entity_id: !input fan_speed_off
+                                    - alias: "Check if the fan speed off option is enabled"
+                                      conditions:
+                                        -  "{{ winter_include_fan_speed == 'fan_speed_off_enabled' }}"
+                                      sequence:
+                                        - alias: "Fan off speed"
+                                          service: homeassistant.turn_on
+                                          entity_id: !input fan_speed_off
+                              - sequence:
+                                  - choose:
+                                    - alias: "Check if the lights are enabled"
+                                      conditions:
+                                        - "{{ include_lights == 'lights_enabled' }}"
+                                      sequence:
+                                        - choose:
+                                          - alias: "If transition is selected"
+                                            conditions:
+                                              - condition: template
+                                                value_template: "{{ 'use_transition' in include_light_control }}"
+                                            sequence:
+                                              - alias: "Turn off the lights"
+                                                service: light.turn_off
+                                                target:
+                                                  entity_id: "{{ light_entities }}"
+                                                data:
+                                                  transition: "{{ transition_off_value }}"
+                                          - alias: "If transition is not selected"
+                                            conditions:
+                                              - condition: template
+                                                value_template: "{{ 'use_transition' not in include_light_control }}"
+                                            sequence:
+                                              - alias: "Turn off the lights"
+                                                service: light.turn_off
+                                                target:
+                                                  entity_id: "{{ light_entities }}"
+                              - sequence:
+                                  - choose:
+                                    - alias: "Check if the automation link is enabled"
+                                      conditions:
+                                        -  "{{ include_automation_link == 'enable_automation_link' }}"
+                                      sequence:
+                                        - alias: "Turn off the automation link"
+                                          service: homeassistant.turn_off
+                                          target:
+                                            entity_id: !input automation_link
+                          - stop: "Stop the automation"
+                      - alias: "Check if the sensor is below falling humidity & by-pass options - turn fan off is disabled"
+                        conditions:
+                          - alias: "Check if the motion trigger is on"
+                            condition: numeric_state
+                            entity_id: !input trigger
+                            below: !input winter_falling_humidity
+                          - condition: not
+                            conditions:
+                              - condition: template
+                                value_template: "{{ 'bypass_turn_fan_off' in bypass_options }}"
+                        sequence:
+                          - alias: "Parallel Actions for the fan and lights"
+                            parallel:
+                              - sequence:
+                                  - alias: "Wait the number of minutes that has been set for the time delay"
+                                    delay:
+                                      minutes: !input winter_time_delay
+                                  - alias: "Turn off the fan"
+                                    service: homeassistant.turn_off
+                                    target: !input fan_switch
+                                  - choose:
+                                    - alias: "Check if the fan speed switch to low speed then off option is enabled"
+                                      conditions:
+                                        -  "{{ winter_include_fan_speed == 'fan_low_speed_enabled' }}"
+                                      sequence:
+                                        - alias: "Fan Speed - Switch Off - Safe Guard"
+                                          service: homeassistant.turn_off
+                                          entity_id: !input fan_speed_off
+                                        - alias: "Fan low speed ON"
+                                          service: homeassistant.turn_on
+                                          entity_id: !input fan_speed_low
+                                        - alias: "Wait the number of minutes set in the low speed time delay"
+                                          delay: 
+                                            minutes: !input winter_time_delay_low_speed
+                                        - alias: "Fan low speed OFF - Safe Guard"
+                                          service: homeassistant.turn_off
+                                          entity_id: !input fan_speed_low
+                                        - alias: "Fan off speed"
+                                          service: homeassistant.turn_on
+                                          entity_id: !input fan_speed_off
+                                    - alias: "Check if the fan speed off option is enabled"
+                                      conditions:
+                                        -  "{{ winter_include_fan_speed == 'fan_speed_off_enabled' }}"
+                                      sequence:
+                                        - alias: "Fan off speed"
+                                          service: homeassistant.turn_on
+                                          entity_id: !input fan_speed_off
+                              - sequence:
+                                  - choose:
+                                    - alias: "Check if the lights are enabled"
+                                      conditions:
+                                        - "{{ include_lights == 'lights_enabled' }}"
+                                      sequence:
+                                        - alias: "Wait the number of minutes set in the lights time delay"
+                                          delay:
+                                            minutes: !input light_time_delay
+                                        - choose:
+                                          - alias: "If transition is selected"
+                                            conditions:
+                                              - condition: template
+                                                value_template: "{{ 'use_transition' in include_light_control }}"
+                                            sequence:
+                                              - alias: "Turn off the lights"
+                                                service: light.turn_off
+                                                target:
+                                                  entity_id: "{{ light_entities }}"
+                                                data:
+                                                  transition: "{{ transition_off_value }}"
+                                          - alias: "If transition is not selected"
+                                            conditions:
+                                              - condition: template
+                                                value_template: "{{ 'use_transition' not in include_light_control }}"
+                                            sequence:
+                                              - alias: "Turn off the lights"
+                                                service: light.turn_off
+                                                target:
+                                                  entity_id: "{{ light_entities }}"
+                              - sequence:
+                                  - choose:
+                                    - alias: "Check if the automation link is enabled"
+                                      conditions:
+                                        -  "{{ include_automation_link == 'enable_automation_link' }}"
+                                      sequence:
+                                        - alias: "Wait the number of minutes set in the automation link time delay"
+                                          delay:
+                                            minutes: !input automation_link_time_delay
+                                        - alias: "Turn off the automation link"
+                                          service: homeassistant.turn_off
+                                          target:
+                                            entity_id: !input automation_link
+                          - stop: "Stop the automation"
+                      - alias: "Check if the sensor is above winter rising humidity & by-pass options - turn fan off is disabled"
+                        conditions:
+                          - alias: "Check if the motion trigger is on"
+                            condition: numeric_state
+                            entity_id: !input trigger
+                            above: !input winter_rising_humidity
+                          - "{{ (expand(fan_switch.entity_id) | selectattr('state', '==', 'off') | list | count > 0 ) or ((include_lights == 'lights_enabled') and (expand(light_switch.entity_id) | selectattr('state', '==', 'off') | list | count > 0)) or ((include_automation_link == 'enable_automation_link') and (expand(automation_link) | selectattr('state', '==', 'off') | list | count > 0)) }}"
+                          - condition: not
+                            conditions:
+                              - condition: template
+                                value_template: "{{ 'bypass_turn_fan_off' in bypass_options }}"
+                        sequence:
+                          - alias: "We need something here to continue"
+                            delay:
+                              milliseconds: 10
+                    default: # Run through automation and preform the correct action
+                      - alias: "Wait until Humidity Derivative Sensor drops or it times out"
+                        wait_for_trigger:
+                          platform: numeric_state
+                          entity_id: !input trigger
+                          below: !input winter_falling_humidity
+                        timeout:
+                          minutes: !input winter_time_out
+                      - alias: "Parallel Actions for the fan and lights"
+                        parallel:
+                          - sequence:
+                              - alias: "Wait the number of minutes that has been set for the time delay"
+                                delay:
+                                  minutes: !input winter_time_delay
+                              - alias: "Turn off the fan"
+                                service: homeassistant.turn_off
+                                target: !input fan_switch
+                              - choose:
+                                - alias: "Check if the fan speed switch to low speed then off option is enabled"
+                                  conditions:
+                                    -  "{{ winter_include_fan_speed == 'fan_low_speed_enabled' }}"
+                                  sequence:
+                                    - alias: "Fan Speed - Switch Off - Safe Guard"
+                                      service: homeassistant.turn_off
+                                      entity_id: !input fan_speed_off
+                                    - alias: "Fan low speed ON"
+                                      service: homeassistant.turn_on
+                                      entity_id: !input fan_speed_low
+                                    - alias: "Wait the number of minutes set in the low speed time delay"
+                                      delay: 
+                                        minutes: !input winter_time_delay_low_speed
+                                    - alias: "Fan low speed OFF - Safe Guard"
+                                      service: homeassistant.turn_off
+                                      entity_id: !input fan_speed_low
+                                    - alias: "Fan off speed"
+                                      service: homeassistant.turn_on
+                                      entity_id: !input fan_speed_off
+                                - alias: "Check if the fan speed off option is enabled"
+                                  conditions:
+                                    -  "{{ winter_include_fan_speed == 'fan_speed_off_enabled' }}"
+                                  sequence:
+                                    - alias: "Fan off speed"
+                                      service: homeassistant.turn_on
+                                      entity_id: !input fan_speed_off
+                          - sequence:
+                              - choose:
+                                - alias: "Check if the lights are enabled"
+                                  conditions:
+                                    - "{{ include_lights == 'lights_enabled' }}"
+                                  sequence:
+                                    - alias: "Wait the number of minutes set in the lights time delay"
+                                      delay:
+                                        minutes: !input light_time_delay
+                                    - choose:
+                                      - alias: "If transition is selected"
+                                        conditions:
+                                          - condition: template
+                                            value_template: "{{ 'use_transition' in include_light_control }}"
+                                        sequence:
+                                          - alias: "Turn off the lights"
+                                            service: light.turn_off
+                                            target:
+                                              entity_id: "{{ light_entities }}"
+                                            data:
+                                              transition: "{{ transition_off_value }}"
+                                      - alias: "If transition is not selected"
+                                        conditions:
+                                          - condition: template
+                                            value_template: "{{ 'use_transition' not in include_light_control }}"
+                                        sequence:
+                                          - alias: "Turn off the lights"
+                                            service: light.turn_off
+                                            target:
+                                              entity_id: "{{ light_entities }}"
+                          - sequence:
+                              - choose:
+                                - alias: "Check if the automation link is enabled"
+                                  conditions:
+                                    -  "{{ include_automation_link == 'enable_automation_link' }}"
+                                  sequence:
+                                    - alias: "Wait the number of minutes set in the automation link time delay"
+                                      delay:
+                                        minutes: !input automation_link_time_delay
+                                    - alias: "Turn off the automation link"
+                                      service: homeassistant.turn_off
+                                      target:
+                                        entity_id: !input automation_link
+                      - stop: "Stop the automation"
+              - alias: "Preform the run on time delay"
+                conditions:
+                  - condition: trigger
+                    id: 't7'
+                sequence:
+                  - choose:
+                    - alias: "Check if fan speeds are enabled"
+                      conditions:
+                        -  "{{ winter_include_fan_speed == 'fan_low_speed_enabled' }}"
+                      sequence:
+                        - alias: "Fan Speed - Low Speed Switch - Safe Guard"
+                          service: homeassistant.turn_off
+                          entity_id: !input fan_speed_low
+                  - choose:
+                    - alias: "Check if fan speeds are enabled"
+                      conditions:
+                        -  "{{ (winter_include_fan_speed == 'fan_low_speed_enabled') or (winter_include_fan_speed == 'fan_speed_off_enabled')}}"
+                      sequence:
+                        - alias: "Fan Speed - Switch Off - Safe Guard"
+                          service: homeassistant.turn_off
+                          entity_id: !input fan_speed_off
+                  - alias: "Turn on the fan"
+                    service: homeassistant.turn_on
+                    target: !input fan_switch
+                  - choose:
+                    - alias: "Check if physical fan switch auto off is enabled"
+                      conditions:
+                        - "{{ 'enable_manual_fan_switch_auto_off' in include_manual_fan_switch }}"
+                      sequence:
+                        - alias: "Wait until physical fan switch is turned off or the time delay passes"
+                          wait_for_trigger:
+                            platform: state
+                            entity_id: !input manual_fan_switch
+                            from: "on"
+                            to: "off"
+                          timeout:
+                            minutes: !input manual_fan_switch_time_delay
+                    - alias: "Check if physical fan switch is enabled"
+                      conditions:
+                        - "{{ 'enable_manual_fan_switch' in include_manual_fan_switch }}"
+                      sequence:
+                        - alias: "Wait until physical fan switch is turned off"
+                          wait_for_trigger:
+                            platform: state
+                            entity_id: !input manual_fan_switch
+                            from: "on"
+                            to: "off"
+                  - alias: "Parallel Actions for the fan, lights and automation link"
+                    parallel:
+                      - sequence:
+                          - alias: "Turn off the fan"
+                            service: homeassistant.turn_off
+                            target: !input fan_switch
+                          - choose:
+                            - alias: "Check if the fan speed off option is enabled"
+                              conditions:
+                                -  "{{ (winter_include_fan_speed == 'fan_low_speed_enabled') or (winter_include_fan_speed == 'fan_speed_off_enabled') }}"
+                              sequence:
+                                - alias: "Fan off speed"
+                                  service: homeassistant.turn_on
+                                  entity_id: !input fan_speed_off
+                          - choose:
+                            - alias: "Check if the run on timer is switch is on"
+                              conditions:
+                                - "{{ expand(manual_fan_switch) | selectattr('state', '==', 'on') | list | count > 0 }}"
+                              sequence:
+                                - alias: "Turn OFF run on timer switch"
+                                  service: homeassistant.turn_off
+                                  entity_id: !input manual_fan_switch
+                      - sequence:
+                          - choose:
+                            - alias: "Check if the lights are enabled"
+                              conditions:
+                                - "{{ ((include_lights == 'lights_enabled') and (expand(light_switch.entity_id) | selectattr('state', '==', 'on') | list | count > 0)) }}"
+                              sequence:
+                                - choose:
+                                  - alias: "If transition is selected"
+                                    conditions:
+                                      - condition: template
+                                        value_template: "{{ 'use_transition' in include_light_control }}"
+                                    sequence:
+                                      - alias: "Turn off the lights"
+                                        service: light.turn_off
+                                        target:
+                                          entity_id: "{{ light_entities }}"
+                                        data:
+                                          transition: "{{ transition_off_value }}"
+                                  - alias: "If transition is not selected"
+                                    conditions:
+                                      - condition: template
+                                        value_template: "{{ 'use_transition' not in include_light_control }}"
+                                    sequence:
+                                      - alias: "Turn off the lights"
+                                        service: light.turn_off
+                                        target:
+                                          entity_id: "{{ light_entities }}"
+                      - sequence:
+                          - choose:
+                            - alias: "Check if the automation link is enabled"
+                              conditions:
+                                -  "{{ ((include_automation_link == 'enable_automation_link') and (expand(automation_link) | selectattr('state', '==', 'on') | list | count > 0)) }}"
+                              sequence:
+                                - alias: "Turn off the automation link"
+                                  service: homeassistant.turn_off
+                                  target:
+                                    entity_id: !input automation_link
+                  - stop: "Stop the automation"
+              - alias: "Safe Guard when HA restarts"
+                conditions:
+                  - condition: trigger
+                    id: 't2'
+                sequence:
+                  - choose:
+                    - alias: "Check if the run on timer is enabled and switch is on"
+                      conditions:
+                        - "{{ ('enable_manual_fan_switch' in include_manual_fan_switch) or ('enable_manual_fan_switch_auto_off' in include_manual_fan_switch) }}"
+                        - "{{ expand(manual_fan_switch) | selectattr('state', '==', 'on') | list | count > 0 }}"
+                      sequence:
+                        - alias: "Turn OFF run on timer switch"
+                          service: homeassistant.turn_off
+                          entity_id: !input manual_fan_switch
+                  - choose:
+                      - alias: "Check automation and preform the correct action"
+                        conditions:
+                          - alias: "Check if the winter humidity derivative sensor is below falling humidity set point and fan / lights are on"
+                            condition: numeric_state
+                            entity_id: !input trigger
+                            below: !input winter_falling_humidity
+                          - "{{ (expand(fan_switch.entity_id) | selectattr('state', '==', 'on') | list | count > 0) or ((winter_include_fan_speed == 'fan_low_speed_enabled') and (expand(fan_speed_low) | selectattr('state', '==', 'on') | list | count > 0)) or ((include_lights == 'lights_enabled') and (expand(light_switch.entity_id) | selectattr('state', '==', 'on') | list | count > 0)) or ((include_automation_link == 'enable_automation_link') and (expand(automation_link) | selectattr('state', '==', 'on') | list | count > 0)) }}"
+                        sequence:
+                          - choose:
+                              - alias: "Check if the by-pass auto off is enabled and by-pass is ON"
+                                conditions:
+                                  - condition: template
+                                    value_template: "{{ (include_bypass_auto_off == 'bypass_auto_off_enabled') and (states[by_pass].state == 'on') }}"
+                                sequence:
+                                  - alias: "Wait the number of minutes set in the by-pass auto off time delay"
+                                    delay:
+                                      minutes: !input bypass_auto_off_delay
+                                  - alias: "Turn off the by-pass"
+                                    service: homeassistant.turn_off
+                                    entity_id: !input by_pass
+                                  - stop: "Stop the automation"
+                          - alias: "Parallel Actions for the fan and lights"
+                            parallel:
+                              - sequence:
+                                  - alias: "Wait the number of minutes that has been set for the time delay"
+                                    delay:
+                                      minutes: !input winter_time_delay
+                                  - alias: "Turn off the fan"
+                                    service: homeassistant.turn_off
+                                    target: !input fan_switch
+                                  - choose:
+                                    - alias: "Check if the fan speed switch to low speed then off option is enabled"
+                                      conditions:
+                                        -  "{{ winter_include_fan_speed == 'fan_low_speed_enabled' }}"
+                                      sequence:
+                                        - alias: "Fan Speed - Switch Off - Safe Guard"
+                                          service: homeassistant.turn_off
+                                          entity_id: !input fan_speed_off
+                                        - alias: "Fan low speed ON"
+                                          service: homeassistant.turn_on
+                                          entity_id: !input fan_speed_low
+                                        - alias: "Wait the number of minutes set in the low speed time delay"
+                                          delay: 
+                                            minutes: !input winter_time_delay_low_speed
+                                        - alias: "Fan low speed OFF - Safe Guard"
+                                          service: homeassistant.turn_off
+                                          entity_id: !input fan_speed_low
+                                        - alias: "Fan off speed"
+                                          service: homeassistant.turn_on
+                                          entity_id: !input fan_speed_off
+                                    - alias: "Check if the fan speed off option is enabled"
+                                      conditions:
+                                        -  "{{ winter_include_fan_speed == 'fan_speed_off_enabled' }}"
+                                      sequence:
+                                        - alias: "Fan off speed"
+                                          service: homeassistant.turn_on
+                                          entity_id: !input fan_speed_off
+                              - sequence:
+                                  - choose:
+                                    - alias: "Check if the lights are enabled"
+                                      conditions:
+                                        -  "{{ include_lights == 'lights_enabled' }}"
+                                      sequence:
+                                        - alias: "Wait the number of minutes set in the lights time delay"
+                                          delay:
+                                            minutes: !input light_time_delay
+                                        - choose:
+                                          - alias: "If transition is selected"
+                                            conditions:
+                                              - condition: template
+                                                value_template: "{{ 'use_transition' in include_light_control }}"
+                                            sequence:
+                                              - alias: "Turn off the lights"
+                                                service: light.turn_off
+                                                target:
+                                                  entity_id: "{{ light_entities }}"
+                                                data:
+                                                  transition: "{{ transition_off_value }}"
+                                          - alias: "If transition is not selected"
+                                            conditions:
+                                              - condition: template
+                                                value_template: "{{ 'use_transition' not in include_light_control }}"
+                                            sequence:
+                                              - alias: "Turn off the lights"
+                                                service: light.turn_off
+                                                target:
+                                                  entity_id: "{{ light_entities }}"
+                              - sequence:
+                                  - choose:
+                                    - alias: "Check if the automation link is enabled"
+                                      conditions:
+                                        -  "{{ include_automation_link == 'enable_automation_link' }}"
+                                      sequence:
+                                        - alias: "Wait the number of minutes set in the automation link time delay"
+                                          delay:
+                                            minutes: !input automation_link_time_delay
+                                        - alias: "Turn off the automation link"
+                                          service: homeassistant.turn_off
+                                          target:
+                                            entity_id: !input automation_link
+                          - stop: "Stop the automation"
+                      - alias: "Check automation and preform the correct action"
+                        conditions:
+                          - alias: "Check if the winter humidity derivative sensor is above falling humidity set point and fan / lights are on"
+                            condition: numeric_state
+                            entity_id: !input trigger
+                            above: !input winter_rising_humidity
+                          - "{{ (expand(fan_switch.entity_id) | selectattr('state', '==', 'on') | list | count > 0) or ((winter_include_fan_speed == 'fan_low_speed_enabled') and (expand(fan_speed_low) | selectattr('state', '==', 'on') | list | count > 0)) }}"
+                          - "{{ ((include_lights == 'lights_enabled') and (expand(light_switch.entity_id) | selectattr('state', '==', 'on') | list | count > 0)) or (include_lights == 'lights_disabled') }}"
+                          - "{{ ((include_automation_link == 'enable_automation_link') and (expand(automation_link) | selectattr('state', '==', 'on') | list | count > 0)) or (include_automation_link == 'disable_automation_link') }}"
+                        sequence:
+                          - choose:
+                              - alias: "Check if the by-pass auto off is enabled and by-pass is ON"
+                                conditions:
+                                  - condition: template
+                                    value_template: "{{ (include_bypass_auto_off == 'bypass_auto_off_enabled') and (states[by_pass].state == 'on') }}"
+                                sequence:
+                                  - alias: "Wait the number of minutes set in the by-pass auto off time delay"
+                                    delay:
+                                      minutes: !input bypass_auto_off_delay
+                                  - alias: "Turn off the by-pass"
+                                    service: homeassistant.turn_off
+                                    entity_id: !input by_pass
+                                  - stop: "Stop the automation"
+                          - alias: "Wait until Humidity Derivative Sensor drops or it times out"
+                            wait_for_trigger:
+                              platform: numeric_state
+                              entity_id: !input trigger
+                              below: !input winter_falling_humidity
+                            timeout:
+                              minutes: !input winter_time_out
+                          - alias: "Parallel Actions for the fan and lights"
+                            parallel:
+                              - sequence:
+                                  - alias: "Wait the number of minutes that has been set for the time delay"
+                                    delay:
+                                      minutes: !input winter_time_delay
+                                  - alias: "Turn off the fan"
+                                    service: homeassistant.turn_off
+                                    target: !input fan_switch
+                                  - choose:
+                                    - alias: "Check if the fan speed switch to low speed then off option is enabled"
+                                      conditions:
+                                        -  "{{ winter_include_fan_speed == 'fan_low_speed_enabled' }}"
+                                      sequence:
+                                        - alias: "Fan Speed - Switch Off - Safe Guard"
+                                          service: homeassistant.turn_off
+                                          entity_id: !input fan_speed_off
+                                        - alias: "Fan low speed ON"
+                                          service: homeassistant.turn_on
+                                          entity_id: !input fan_speed_low
+                                        - alias: "Wait the number of minutes set in the low speed time delay"
+                                          delay: 
+                                            minutes: !input winter_time_delay_low_speed
+                                        - alias: "Fan low speed OFF - Safe Guard"
+                                          service: homeassistant.turn_off
+                                          entity_id: !input fan_speed_low
+                                        - alias: "Fan off speed"
+                                          service: homeassistant.turn_on
+                                          entity_id: !input fan_speed_off
+                                    - alias: "Check if the fan speed off option is enabled"
+                                      conditions:
+                                        -  "{{ winter_include_fan_speed == 'fan_speed_off_enabled' }}"
+                                      sequence:
+                                        - alias: "Fan off speed"
+                                          service: homeassistant.turn_on
+                                          entity_id: !input fan_speed_off
+                              - sequence:
+                                  - choose:
+                                    - alias: "Check if the lights are enabled"
+                                      conditions:
+                                        - "{{ include_lights == 'lights_enabled' }}"
+                                      sequence:
+                                        - alias: "Wait the number of minutes set in the lights time delay"
+                                          delay:
+                                            minutes: !input light_time_delay
+                                        - choose:
+                                          - alias: "If transition is selected"
+                                            conditions:
+                                              - condition: template
+                                                value_template: "{{ 'use_transition' in include_light_control }}"
+                                            sequence:
+                                              - alias: "Turn off the lights"
+                                                service: light.turn_off
+                                                target:
+                                                  entity_id: "{{ light_entities }}"
+                                                data:
+                                                  transition: "{{ transition_off_value }}"
+                                          - alias: "If transition is not selected"
+                                            conditions:
+                                              - condition: template
+                                                value_template: "{{ 'use_transition' not in include_light_control }}"
+                                            sequence:
+                                              - alias: "Turn off the lights"
+                                                service: light.turn_off
+                                                target:
+                                                  entity_id: "{{ light_entities }}"
+                              - sequence:
+                                  - choose:
+                                    - alias: "Check if the automation link is enabled"
+                                      conditions:
+                                        -  "{{ include_automation_link == 'enable_automation_link' }}"
+                                      sequence:
+                                        - alias: "Wait the number of minutes set in the automation link time delay"
+                                          delay:
+                                            minutes: !input automation_link_time_delay
+                                        - alias: "Turn off the automation link"
+                                          service: homeassistant.turn_off
+                                          target:
+                                            entity_id: !input automation_link
+                          - stop: "Stop the automation"
+          - choose:
+            - alias: "Check if the run on timer is enabled and switch is on"
+              conditions:
+                - "{{ ('enable_manual_fan_switch' in include_manual_fan_switch) or ('enable_manual_fan_switch_auto_off' in include_manual_fan_switch) }}"
+                - "{{ expand(manual_fan_switch) | selectattr('state', '==', 'on') | list | count > 0 }}"
+              sequence:
+                - alias: "Turn OFF run on timer switch"
+                  service: homeassistant.turn_off
+                  entity_id: !input manual_fan_switch
+          - choose:
+            - alias: "Check if fan speeds are enabled"
+              conditions:
+                -  "{{ winter_include_fan_speed == 'fan_low_speed_enabled' }}"
+              sequence:
+                - alias: "Fan Speed - Low Speed Switch - Safe Guard"
+                  service: homeassistant.turn_off
+                  entity_id: !input fan_speed_low
+          - choose:
+            - alias: "Check if fan speeds are enabled"
+              conditions:
+                -  "{{ (winter_include_fan_speed == 'fan_low_speed_enabled') or (winter_include_fan_speed == 'fan_speed_off_enabled')}}"
+              sequence:
+                - alias: "Fan Speed - Switch Off - Safe Guard"
+                  service: homeassistant.turn_off
+                  entity_id: !input fan_speed_off
+          - alias: "Turn on the fan"
+            service: homeassistant.turn_on
+            target: !input fan_switch
+          - choose:
+              - alias: "Check if the lights are enabled"
+                conditions:
+                  - "{{ include_lights == 'lights_enabled' }}"
+                sequence:
+                  - choose:
+                    - alias: "Set the transition for the winter mode lights"
+                      conditions:
+                        - condition: template
+                          value_template: "{{ ('use_transition' in include_light_control) and ('use_brightness' not in include_light_control) and ('use_colour_temperature' not in include_light_control) }}"
+                      sequence:
+                        - service: light.turn_on
+                          target:
+                            entity_id: "{{ light_entities }}"
+                          data:
+                            transition:  "{{ transition_on_value }}"
+                    - alias: "Set the transition and brightness for the winter mode lights"
+                      conditions:
+                        - condition: template
+                          value_template: "{{ ('use_transition' in include_light_control) and ('use_brightness' in include_light_control) and ('use_colour_temperature' not in include_light_control) }}"
+                      sequence:
+                        - service: light.turn_on
+                          target:
+                            entity_id: "{{ light_entities }}"
+                          data:
+                            transition:  "{{ transition_on_value }}"
+                            brightness_pct: "{{ brightness_value }}"
+                    - alias: "Set the transition and colour temperature for the winter mode lights"
+                      conditions:
+                        - condition: template
+                          value_template: "{{ ('use_transition' in include_light_control) and ('use_brightness' not in include_light_control) and ('use_colour_temperature' in include_light_control) }}"
+                      sequence:
+                        - service: light.turn_on
+                          target:
+                            entity_id: "{{ light_entities }}"
+                          data:
+                            transition:  "{{ transition_on_value }}"
+                            kelvin: "{{temperature_value}}"
+                    - alias: "Set the transition, brightness and colour temperature for the winter mode lights"
+                      conditions:
+                        - condition: template
+                          value_template: "{{ ('use_transition' in include_light_control) and ('use_brightness' in include_light_control) and ('use_colour_temperature' in include_light_control) }}"
+                      sequence:
+                        - service: light.turn_on
+                          target:
+                            entity_id: "{{ light_entities }}"
+                          data:
+                            transition:  "{{ transition_on_value }}"
+                            brightness_pct: "{{ brightness_value }}"
+                            kelvin: "{{temperature_value}}"
+                    - alias: "Set the brightness for the winter mode lights"
+                      conditions:
+                        - condition: template
+                          value_template: "{{ ('use_transition' not in include_light_control) and ('use_brightness' in include_light_control) and ('use_colour_temperature' not in include_light_control) }}"
+                      sequence:
+                        - service: light.turn_on
+                          target:
+                            entity_id: "{{ light_entities }}"
+                          data:
+                            brightness_pct: "{{ brightness_value }}"
+                    - alias: "Set the colour temperature for the winter mode lights"
+                      conditions:
+                        - condition: template
+                          value_template: "{{ ('use_transition' not in include_light_control) and ('use_brightness' not in include_light_control) and ('use_colour_temperature' in include_light_control) }}"
+                      sequence:
+                        - service: light.turn_on
+                          target:
+                            entity_id: "{{ light_entities }}"
+                          data:
+                            kelvin: "{{temperature_value}}"
+                    - alias: "Set the brightness and colour temperature for the winter mode lights"
+                      conditions:
+                        - condition: template
+                          value_template: "{{ ('use_transition' not in include_light_control) and ('use_brightness' in include_light_control) and ('use_colour_temperature' in include_light_control) }}"
+                      sequence:
+                        - service: light.turn_on
+                          target:
+                            entity_id: "{{ light_entities }}"
+                          data:
+                            brightness_pct: "{{ brightness_value }}"
+                            kelvin: "{{temperature_value}}"
+                    - alias: "Set the default for the winter mode lights"
+                      conditions:
+                        - condition: template
+                          value_template: "{{ ('use_transition' not in include_light_control) and ('use_brightness' not in include_light_control) and ('use_colour_temperature' not in include_light_control) }}"
+                      sequence:
+                        - service: light.turn_on
+                          target:
+                            entity_id: "{{ light_entities }}"
+          - choose:
+            - alias: "Check if the automation link is enabled"
+              conditions:
+                -  "{{ include_automation_link == 'enable_automation_link' }}"
+              sequence:
+                - alias: "Turn on the automation link"
+                  service: homeassistant.turn_on
+                  target:
+                    entity_id: !input automation_link
+          - choose:
+            - alias: "By-pass is enabled & check by-pass option - turn fan on"
+              conditions:
+                - condition: trigger
+                  id: 't5'
+                - condition: template
+                  value_template: "{{ include_bypass == 'bypass_enabled_turn_on' }}"
+              sequence:
+                - alias: "Check by-pass settings and preform the correct action"
+                  if:
+                    - alias: "Check if the by-pass auto off is enabled"
+                      condition: template
+                      value_template: "{{ include_bypass_auto_off == 'bypass_auto_off_enabled' }}"
+                  then:
+                    - alias: "Wait the number of minutes set in the by-pass auto off time delay"
+                      delay: 
+                        minutes: !input bypass_auto_off_delay
+                    - alias: "Turn off the by-pass"
+                      service: homeassistant.turn_off
+                      entity_id: !input by_pass
+                    - stop: "Stop the automation"
+                  else:
+                    - stop: "Stop the automation"
+          - alias: "Wait until Humidity Derivative Sensor drops or it times out"
+            wait_for_trigger:
+              platform: numeric_state
+              entity_id: !input trigger
+              below: !input winter_falling_humidity
+            timeout:
+              minutes: !input winter_time_out
+          - alias: "Parallel Actions for the fan and lights"
+            parallel:
+              - sequence:
+                  - alias: "Wait the number of minutes that has been set for the time delay"
+                    delay:
+                      minutes: !input winter_time_delay
+                  - alias: "Turn off the fan"
+                    service: homeassistant.turn_off
+                    target: !input fan_switch
+                  - choose:
+                    - alias: "Check if the fan speed switch to low speed then off option is enabled"
+                      conditions:
+                        -  "{{ winter_include_fan_speed == 'fan_low_speed_enabled' }}"
+                      sequence:
+                        - alias: "Fan low speed ON"
+                          service: homeassistant.turn_on
+                          entity_id: !input fan_speed_low
+                        - alias: "Wait the number of minutes set in the low speed time delay"
+                          delay: 
+                            minutes: !input winter_time_delay_low_speed
+                        - alias: "Fan low speed OFF - Safe Guard"
+                          service: homeassistant.turn_off
+                          entity_id: !input fan_speed_low
+                        - alias: "Fan off speed"
+                          service: homeassistant.turn_on
+                          entity_id: !input fan_speed_off
+                    - alias: "Check if the fan speed off option is enabled"
+                      conditions:
+                        -  "{{ winter_include_fan_speed == 'fan_speed_off_enabled' }}"
+                      sequence:
+                        - alias: "Fan off speed"
+                          service: homeassistant.turn_on
+                          entity_id: !input fan_speed_off
+              - sequence:
+                  - choose:
+                    - alias: "Check if the lights are enabled"
+                      conditions:
+                        - "{{ include_lights == 'lights_enabled' }}"
+                      sequence:
+                        - alias: "Wait the number of minutes set in the lights time delay"
+                          delay:
+                            minutes: !input light_time_delay
+                        - choose:
+                          - alias: "If transition is selected"
+                            conditions:
+                              - condition: template
+                                value_template: "{{ 'use_transition' in include_light_control }}"
+                            sequence:
+                              - alias: "Turn off the lights"
+                                service: light.turn_off
+                                target:
+                                  entity_id: "{{ light_entities }}"
+                                data:
+                                  transition: "{{ transition_off_value }}"
+                          - alias: "If transition is not selected"
+                            conditions:
+                              - condition: template
+                                value_template: "{{ 'use_transition' not in include_light_control }}"
+                            sequence:
+                              - alias: "Turn off the lights"
+                                service: light.turn_off
+                                target:
+                                  entity_id: "{{ light_entities }}"
+              - sequence:
+                  - choose:
+                    - alias: "Check if the automation link is enabled"
+                      conditions:
+                        -  "{{ include_automation_link == 'enable_automation_link' }}"
+                      sequence:
+                        - alias: "Wait the number of minutes set in the automation link time delay"
+                          delay:
+                            minutes: !input automation_link_time_delay
+                        - alias: "Turn off the automation link"
+                          service: homeassistant.turn_off
+                          target:
+                            entity_id: !input automation_link
+    default:
+      - alias: "Check if the triggers"
+        condition: trigger
+        id:
+          - 't2'
+          - 't3'
+          - 't4'
+          - 't5'
+          - 't6'
+          - 't7'
+      - choose:
+          - alias: "By-pass is turned on  & check by-pass option - turn fan off"
+            conditions:
+              - condition: trigger
+                id: 't5'
+              - condition: template
+                value_template: "{{ include_bypass == 'bypass_enabled' }}"
+            sequence:
+              - choose:
+                - alias: "Check if the run on timer is enabled and switch is on"
+                  conditions:
+                    - "{{ ('enable_manual_fan_switch' in include_manual_fan_switch) or ('enable_manual_fan_switch_auto_off' in include_manual_fan_switch) }}"
+                    - "{{ expand(manual_fan_switch) | selectattr('state', '==', 'on') | list | count > 0 }}"
+                  sequence:
+                    - alias: "Turn OFF run on timer switch"
+                      service: homeassistant.turn_off
+                      entity_id: !input manual_fan_switch
+              - alias: "Parallel Actions for the fan and lights"
+                parallel:
+                  - sequence:
+                      - alias: "Turn off the fan"
+                        service: homeassistant.turn_off
+                        target: !input fan_switch
+                      - choose:
+                        - alias: "Check if the fan speed switch to low speed then off option is enabled"
+                          conditions:
+                            -  "{{ include_fan_speed == 'fan_low_speed_enabled' }}"
+                          sequence:
+                            - alias: "Fan low speed OFF - Safe Guard"
+                              service: homeassistant.turn_off
+                              entity_id: !input fan_speed_low
+                            - alias: "Fan off speed"
+                              service: homeassistant.turn_on
+                              entity_id: !input fan_speed_off
+                        - alias: "Check if the fan speed off option is enabled"
+                          conditions:
+                            -  "{{ include_fan_speed == 'fan_speed_off_enabled' }}"
+                          sequence:
+                            - alias: "Fan off speed"
+                              service: homeassistant.turn_on
+                              entity_id: !input fan_speed_off
+                  - sequence:
+                      - choose:
+                        - alias: "Check if the lights are enabled"
+                          conditions:
+                            -  "{{ include_lights == 'lights_enabled' }}"
+                          sequence:
+                            - choose:
+                              - alias: "If transition is selected"
+                                conditions:
+                                  - condition: template
+                                    value_template: "{{ 'use_transition' in include_light_control }}"
+                                sequence:
+                                  - alias: "Turn off the lights"
+                                    service: light.turn_off
+                                    target:
+                                      entity_id: "{{ light_entities }}"
+                                    data:
+                                      transition: "{{ transition_off_value }}"
+                              - alias: "If transition is not selected"
+                                conditions:
+                                  - condition: template
+                                    value_template: "{{ 'use_transition' not in include_light_control }}"
+                                sequence:
+                                  - alias: "Turn off the lights"
+                                    service: light.turn_off
+                                    target:
+                                      entity_id: "{{ light_entities }}"
+                            - stop: "Stop the lights"
+                  - sequence:
+                      - choose:
+                        - alias: "Check if the automation link is enabled"
+                          conditions:
+                            -  "{{ include_automation_link == 'enable_automation_link' }}"
+                          sequence:
+                            - alias: "Turn off the automation link"
+                              service: homeassistant.turn_off
+                              target:
+                                entity_id: !input automation_link
+                            - stop: "Stop the automation link"
+              - alias: "Check by-pass settings and preform the correct action"
+                if:
+                  - alias: "Check if the by-pass auto off is enabled"
+                    condition: template
+                    value_template: "{{ include_bypass_auto_off == 'bypass_auto_off_enabled' }}"
+                then:
+                  - alias: "Wait the number of minutes set in the by-pass auto off time delay"
+                    delay: 
+                      minutes: !input bypass_auto_off_delay
+                  - alias: "Turn off the by-pass"
+                    service: homeassistant.turn_off
+                    entity_id: !input by_pass
+              - stop: "Stop the automation"
+          - alias: "By-pass is turned on  & check by-pass option - keep the current fan state"
+            conditions:
+              - condition: trigger
+                id: 't5'
+              - condition: template
+                value_template: "{{ include_bypass == 'bypass_enabled_stop' }}"
+            sequence:
+              - choose:
+                - alias: "Check if the run on timer is enabled and switch is on"
+                  conditions:
+                    - "{{ ('enable_manual_fan_switch' in include_manual_fan_switch) or ('enable_manual_fan_switch_auto_off' in include_manual_fan_switch) }}"
+                    - "{{ expand(manual_fan_switch) | selectattr('state', '==', 'on') | list | count > 0 }}"
+                  sequence:
+                    - alias: "Turn OFF run on timer switch"
+                      service: homeassistant.turn_off
+                      entity_id: !input manual_fan_switch
+              - alias: "Check by-pass settings and preform the correct action"
+                if:
+                  - alias: "Check if the by-pass auto off is enabled"
+                    condition: template
+                    value_template: "{{ include_bypass_auto_off == 'bypass_auto_off_enabled' }}"
+                then:
+                  - alias: "Wait the number of minutes set in the by-pass auto off time delay"
+                    delay: 
+                      minutes: !input bypass_auto_off_delay
+                  - alias: "Turn off the by-pass"
+                    service: homeassistant.turn_off
+                    entity_id: !input by_pass
+                  - stop: "Stop the automation"
+                else:
+                  - stop: "Stop the automation"
+          - alias: "By-pass is turned off  & check if the sensor is below falling humidity"
+            conditions:
+              - condition: trigger
+                id: 't6'
+            sequence:
+              - choose:
+                - alias: "Check if the run on timer is enabled and switch is on"
+                  conditions:
+                    - "{{ ('enable_manual_fan_switch' in include_manual_fan_switch) or ('enable_manual_fan_switch_auto_off' in include_manual_fan_switch) }}"
+                    - "{{ expand(manual_fan_switch) | selectattr('state', '==', 'on') | list | count > 0 }}"
+                  sequence:
+                    - alias: "Turn OFF run on timer switch"
+                      service: homeassistant.turn_off
+                      entity_id: !input manual_fan_switch
+              - choose:
+                  - alias: "Check by-pass options - turn fan off is enabled"
+                    conditions:
+                      - condition: template
+                        value_template: "{{ 'bypass_turn_fan_off' in bypass_options }}"
+                    sequence:
+                      - alias: "Parallel Actions for the fan and lights"
+                        parallel:
+                          - sequence:
+                              - alias: "Turn off the fan"
+                                service: homeassistant.turn_off
+                                target: !input fan_switch
+                              - choose:
+                                - alias: "Check if the fan speed switch to low speed then off option is enabled"
+                                  conditions:
+                                    -  "{{ include_fan_speed == 'fan_low_speed_enabled' }}"
+                                  sequence:
+                                    - alias: "Fan low speed OFF - Safe Guard"
+                                      service: homeassistant.turn_off
+                                      entity_id: !input fan_speed_low
+                                    - alias: "Fan off speed"
+                                      service: homeassistant.turn_on
+                                      entity_id: !input fan_speed_off
+                                - alias: "Check if the fan speed off option is enabled"
+                                  conditions:
+                                    -  "{{ include_fan_speed == 'fan_speed_off_enabled' }}"
+                                  sequence:
+                                    - alias: "Fan off speed"
+                                      service: homeassistant.turn_on
+                                      entity_id: !input fan_speed_off
+                          - sequence:
+                              - choose:
+                                - alias: "Check if the lights are enabled"
+                                  conditions:
+                                    - "{{ include_lights == 'lights_enabled' }}"
+                                  sequence:
+                                    - choose:
+                                      - alias: "If transition is selected"
+                                        conditions:
+                                          - condition: template
+                                            value_template: "{{ 'use_transition' in include_light_control }}"
+                                        sequence:
+                                          - alias: "Turn off the lights"
+                                            service: light.turn_off
+                                            target:
+                                              entity_id: "{{ light_entities }}"
+                                            data:
+                                              transition: "{{ transition_off_value }}"
+                                      - alias: "If transition is not selected"
+                                        conditions:
+                                          - condition: template
+                                            value_template: "{{ 'use_transition' not in include_light_control }}"
+                                        sequence:
+                                          - alias: "Turn off the lights"
+                                            service: light.turn_off
+                                            target:
+                                              entity_id: "{{ light_entities }}"
+                          - sequence:
+                              - choose:
+                                - alias: "Check if the automation link is enabled"
+                                  conditions:
+                                    -  "{{ include_automation_link == 'enable_automation_link' }}"
+                                  sequence:
+                                    - alias: "Turn off the automation link"
+                                      service: homeassistant.turn_off
+                                      target:
+                                        entity_id: !input automation_link
+                      - stop: "Stop the automation"
+                  - alias: "Check if the sensor is below falling humidity & by-pass options - turn fan off is disabled"
+                    conditions:
+                      - alias: "Check if the motion trigger is on"
+                        condition: numeric_state
+                        entity_id: !input trigger
+                        below: !input falling_humidity
+                      - condition: not
+                        conditions:
+                          - condition: template
+                            value_template: "{{ 'bypass_turn_fan_off' in bypass_options }}"
+                    sequence:
+                      - alias: "Parallel Actions for the fan and lights"
+                        parallel:
+                          - sequence:
+                              - alias: "Wait the number of minutes that has been set for the time delay"
+                                delay:
+                                  minutes: !input time_delay
+                              - alias: "Turn off the fan"
+                                service: homeassistant.turn_off
+                                target: !input fan_switch
+                              - choose:
+                                - alias: "Check if the fan speed switch to low speed then off option is enabled"
+                                  conditions:
+                                    -  "{{ include_fan_speed == 'fan_low_speed_enabled' }}"
+                                  sequence:
+                                    - alias: "Fan Speed - Switch Off - Safe Guard"
+                                      service: homeassistant.turn_off
+                                      entity_id: !input fan_speed_off
+                                    - alias: "Fan low speed ON"
+                                      service: homeassistant.turn_on
+                                      entity_id: !input fan_speed_low
+                                    - alias: "Wait the number of minutes set in the low speed time delay"
+                                      delay: 
+                                        minutes: !input time_delay_low_speed
+                                    - alias: "Fan low speed OFF - Safe Guard"
+                                      service: homeassistant.turn_off
+                                      entity_id: !input fan_speed_low
+                                    - alias: "Fan off speed"
+                                      service: homeassistant.turn_on
+                                      entity_id: !input fan_speed_off
+                                - alias: "Check if the fan speed off option is enabled"
+                                  conditions:
+                                    -  "{{ include_fan_speed == 'fan_speed_off_enabled' }}"
+                                  sequence:
+                                    - alias: "Fan off speed"
+                                      service: homeassistant.turn_on
+                                      entity_id: !input fan_speed_off
+                          - sequence:
+                              - choose:
+                                - alias: "Check if the lights are enabled"
+                                  conditions:
+                                    - "{{ include_lights == 'lights_enabled' }}"
+                                  sequence:
+                                    - alias: "Wait the number of minutes set in the lights time delay"
+                                      delay:
+                                        minutes: !input light_time_delay
+                                    - choose:
+                                      - alias: "If transition is selected"
+                                        conditions:
+                                          - condition: template
+                                            value_template: "{{ 'use_transition' in include_light_control }}"
+                                        sequence:
+                                          - alias: "Turn off the lights"
+                                            service: light.turn_off
+                                            target:
+                                              entity_id: "{{ light_entities }}"
+                                            data:
+                                              transition: "{{ transition_off_value }}"
+                                      - alias: "If transition is not selected"
+                                        conditions:
+                                          - condition: template
+                                            value_template: "{{ 'use_transition' not in include_light_control }}"
+                                        sequence:
+                                          - alias: "Turn off the lights"
+                                            service: light.turn_off
+                                            target:
+                                              entity_id: "{{ light_entities }}"
+                          - sequence:
+                              - choose:
+                                - alias: "Check if the automation link is enabled"
+                                  conditions:
+                                    -  "{{ include_automation_link == 'enable_automation_link' }}"
+                                  sequence:
+                                    - alias: "Wait the number of minutes set in the automation link time delay"
+                                      delay:
+                                        minutes: !input automation_link_time_delay
+                                    - alias: "Turn off the automation link"
+                                      service: homeassistant.turn_off
+                                      target:
+                                        entity_id: !input automation_link
+                      - stop: "Stop the automation"
+                  - alias: "Check if the sensor is above rising humidity & by-pass options - turn fan off is disabled"
+                    conditions:
+                      - alias: "Check if the motion trigger is on"
+                        condition: numeric_state
+                        entity_id: !input trigger
+                        above: !input rising_humidity
+                      - "{{ (expand(fan_switch.entity_id) | selectattr('state', '==', 'off') | list | count > 0 ) or ((include_lights == 'lights_enabled') and (expand(light_switch.entity_id) | selectattr('state', '==', 'off') | list | count > 0)) or ((include_automation_link == 'enable_automation_link') and (expand(automation_link) | selectattr('state', '==', 'off') | list | count > 0)) }}"
+                      - condition: not
+                        conditions:
+                          - condition: template
+                            value_template: "{{ 'bypass_turn_fan_off' in bypass_options }}"
+                    sequence:
+                      - alias: "We need something here to continue"
+                        delay:
+                          milliseconds: 10
+                default: # Run through automation and preform the correct action
+                  - alias: "Wait until Humidity Derivative Sensor drops or it times out"
+                    wait_for_trigger:
+                      platform: numeric_state
+                      entity_id: !input trigger
+                      below: !input falling_humidity
+                    timeout:
+                      minutes: !input time_out
+                  - alias: "Parallel Actions for the fan and lights"
+                    parallel:
+                      - sequence:
+                          - alias: "Wait the number of minutes that has been set for the time delay"
+                            delay:
+                              minutes: !input time_delay
+                          - alias: "Turn off the fan"
+                            service: homeassistant.turn_off
+                            target: !input fan_switch
+                          - choose:
+                            - alias: "Check if the fan speed switch to low speed then off option is enabled"
+                              conditions:
+                                -  "{{ include_fan_speed == 'fan_low_speed_enabled' }}"
+                              sequence:
+                                - alias: "Fan Speed - Switch Off - Safe Guard"
+                                  service: homeassistant.turn_off
+                                  entity_id: !input fan_speed_off
+                                - alias: "Fan low speed ON"
+                                  service: homeassistant.turn_on
+                                  entity_id: !input fan_speed_low
+                                - alias: "Wait the number of minutes set in the low speed time delay"
+                                  delay: 
+                                    minutes: !input time_delay_low_speed
+                                - alias: "Fan low speed OFF - Safe Guard"
+                                  service: homeassistant.turn_off
+                                  entity_id: !input fan_speed_low
+                                - alias: "Fan off speed"
+                                  service: homeassistant.turn_on
+                                  entity_id: !input fan_speed_off
+                            - alias: "Check if the fan speed off option is enabled"
+                              conditions:
+                                -  "{{ include_fan_speed == 'fan_speed_off_enabled' }}"
+                              sequence:
+                                - alias: "Fan off speed"
+                                  service: homeassistant.turn_on
+                                  entity_id: !input fan_speed_off
+                      - sequence:
+                          - choose:
+                            - alias: "Check if the lights are enabled"
+                              conditions:
+                                - "{{ include_lights == 'lights_enabled' }}"
+                              sequence:
+                                - alias: "Wait the number of minutes set in the lights time delay"
+                                  delay:
+                                    minutes: !input light_time_delay
+                                - choose:
+                                  - alias: "If transition is selected"
+                                    conditions:
+                                      - condition: template
+                                        value_template: "{{ 'use_transition' in include_light_control }}"
+                                    sequence:
+                                      - alias: "Turn off the lights"
+                                        service: light.turn_off
+                                        target:
+                                          entity_id: "{{ light_entities }}"
+                                        data:
+                                          transition: "{{ transition_off_value }}"
+                                  - alias: "If transition is not selected"
+                                    conditions:
+                                      - condition: template
+                                        value_template: "{{ 'use_transition' not in include_light_control }}"
+                                    sequence:
+                                      - alias: "Turn off the lights"
+                                        service: light.turn_off
+                                        target:
+                                          entity_id: "{{ light_entities }}"
+                      - sequence:
+                          - choose:
+                            - alias: "Check if the automation link is enabled"
+                              conditions:
+                                -  "{{ include_automation_link == 'enable_automation_link' }}"
+                              sequence:
+                                - alias: "Wait the number of minutes set in the automation link time delay"
+                                  delay:
+                                    minutes: !input automation_link_time_delay
+                                - alias: "Turn off the automation link"
+                                  service: homeassistant.turn_off
+                                  target:
+                                    entity_id: !input automation_link
+                  - stop: "Stop the automation"
+          - alias: "Preform the run on time delay"
+            conditions:
+              - condition: trigger
+                id: 't7'
+            sequence:
+              - choose:
+                - alias: "Check if fan speeds are enabled"
+                  conditions:
+                    -  "{{ include_fan_speed == 'fan_low_speed_enabled' }}"
+                  sequence:
+                    - alias: "Fan Speed - Low Speed Switch - Safe Guard"
+                      service: homeassistant.turn_off
+                      entity_id: !input fan_speed_low
+              - choose:
+                - alias: "Check if fan speeds are enabled"
+                  conditions:
+                    -  "{{ (include_fan_speed == 'fan_low_speed_enabled') or (include_fan_speed == 'fan_speed_off_enabled')}}"
+                  sequence:
+                    - alias: "Fan Speed - Switch Off - Safe Guard"
+                      service: homeassistant.turn_off
+                      entity_id: !input fan_speed_off
+              - alias: "Turn on the fan"
+                service: homeassistant.turn_on
+                target: !input fan_switch
+              - choose:
+                - alias: "Check if physical fan switch auto off is enabled"
+                  conditions:
+                    - "{{ 'enable_manual_fan_switch_auto_off' in include_manual_fan_switch }}"
+                  sequence:
+                    - alias: "Wait until physical fan switch is turned off or the time delay passes"
+                      wait_for_trigger:
+                        platform: state
+                        entity_id: !input manual_fan_switch
+                        from: "on"
+                        to: "off"
+                      timeout:
+                        minutes: !input manual_fan_switch_time_delay
+                - alias: "Check if physical fan switch is enabled"
+                  conditions:
+                    - "{{ 'enable_manual_fan_switch' in include_manual_fan_switch }}"
+                  sequence:
+                    - alias: "Wait until physical fan switch is turned off"
+                      wait_for_trigger:
+                        platform: state
+                        entity_id: !input manual_fan_switch
+                        from: "on"
+                        to: "off"
+              - alias: "Parallel Actions for the fan, lights and automation link"
+                parallel:
+                  - sequence:
+                      - alias: "Turn off the fan"
+                        service: homeassistant.turn_off
+                        target: !input fan_switch
+                      - choose:
+                        - alias: "Check if the fan speed off option is enabled"
+                          conditions:
+                            -  "{{ (include_fan_speed == 'fan_low_speed_enabled') or (include_fan_speed == 'fan_speed_off_enabled') }}"
+                          sequence:
+                            - alias: "Fan off speed"
+                              service: homeassistant.turn_on
+                              entity_id: !input fan_speed_off
+                      - choose:
+                        - alias: "Check if the run on timer switch is on"
+                          conditions:
+                            - "{{ expand(manual_fan_switch) | selectattr('state', '==', 'on') | list | count > 0 }}"
+                          sequence:
+                            - alias: "Turn OFF run on timer switch"
+                              service: homeassistant.turn_off
+                              entity_id: !input manual_fan_switch
+                  - sequence:
+                      - choose:
+                        - alias: "Check if the lights are enabled"
+                          conditions:
+                            - "{{ ((include_lights == 'lights_enabled') and (expand(light_switch.entity_id) | selectattr('state', '==', 'on') | list | count > 0)) }}"
+                          sequence:
+                            - choose:
+                              - alias: "If transition is selected"
+                                conditions:
+                                  - condition: template
+                                    value_template: "{{ 'use_transition' in include_light_control }}"
+                                sequence:
+                                  - alias: "Turn off the lights"
+                                    service: light.turn_off
+                                    target:
+                                      entity_id: "{{ light_entities }}"
+                                    data:
+                                      transition: "{{ transition_off_value }}"
+                              - alias: "If transition is not selected"
+                                conditions:
+                                  - condition: template
+                                    value_template: "{{ 'use_transition' not in include_light_control }}"
+                                sequence:
+                                  - alias: "Turn off the lights"
+                                    service: light.turn_off
+                                    target:
+                                      entity_id: "{{ light_entities }}"
+                  - sequence:
+                      - choose:
+                        - alias: "Check if the automation link is enabled"
+                          conditions:
+                            -  "{{ ((include_automation_link == 'enable_automation_link') and (expand(automation_link) | selectattr('state', '==', 'on') | list | count > 0)) }}"
+                          sequence:
+                            - alias: "Turn off the automation link"
+                              service: homeassistant.turn_off
+                              target:
+                                entity_id: !input automation_link
+              - stop: "Stop the automation"
+          - alias: "Safe Guard when HA restarts"
+            conditions:
+              - condition: trigger
+                id: 't2'
+            sequence:
+              - choose:
+                - alias: "Check if the run on timer is enabled and switch is on"
+                  conditions:
+                    - "{{ ('enable_manual_fan_switch' in include_manual_fan_switch) or ('enable_manual_fan_switch_auto_off' in include_manual_fan_switch) }}"
+                    - "{{ expand(manual_fan_switch) | selectattr('state', '==', 'on') | list | count > 0 }}"
+                  sequence:
+                    - alias: "Turn OFF run on timer switch"
+                      service: homeassistant.turn_off
+                      entity_id: !input manual_fan_switch
+              - choose:
+                  - alias: "Check automation and preform the correct action"
+                    conditions:
+                      - alias: "Check if the humidity derivative sensor is below falling humidity set point and fan / lights are on"
+                        condition: numeric_state
+                        entity_id: !input trigger
+                        below: !input falling_humidity
+                      - "{{ (expand(fan_switch.entity_id) | selectattr('state', '==', 'on') | list | count > 0) or ((include_fan_speed == 'fan_low_speed_enabled') and (expand(fan_speed_low) | selectattr('state', '==', 'on') | list | count > 0)) or ((include_lights == 'lights_enabled') and (expand(light_switch.entity_id) | selectattr('state', '==', 'on') | list | count > 0)) or ((include_automation_link == 'enable_automation_link') and (expand(automation_link) | selectattr('state', '==', 'on') | list | count > 0)) }}"
+                    sequence:
+                      - choose:
+                          - alias: "Check if the by-pass auto off is enabled and by-pass is ON"
+                            conditions:
+                              - condition: template
+                                value_template: "{{ (include_bypass_auto_off == 'bypass_auto_off_enabled') and (states[by_pass].state == 'on') }}"
+                            sequence:
+                              - alias: "Wait the number of minutes set in the by-pass auto off time delay"
+                                delay:
+                                  minutes: !input bypass_auto_off_delay
+                              - alias: "Turn off the by-pass"
+                                service: homeassistant.turn_off
+                                entity_id: !input by_pass
+                              - stop: "Stop the automation"
+                      - alias: "Parallel Actions for the fan and lights"
+                        parallel:
+                          - sequence:
+                              - alias: "Wait the number of minutes that has been set for the time delay"
+                                delay:
+                                  minutes: !input time_delay
+                              - alias: "Turn off the fan"
+                                service: homeassistant.turn_off
+                                target: !input fan_switch
+                              - choose:
+                                - alias: "Check if the fan speed switch to low speed then off option is enabled"
+                                  conditions:
+                                    -  "{{ include_fan_speed == 'fan_low_speed_enabled' }}"
+                                  sequence:
+                                    - alias: "Fan Speed - Switch Off - Safe Guard"
+                                      service: homeassistant.turn_off
+                                      entity_id: !input fan_speed_off
+                                    - alias: "Fan low speed ON"
+                                      service: homeassistant.turn_on
+                                      entity_id: !input fan_speed_low
+                                    - alias: "Wait the number of minutes set in the low speed time delay"
+                                      delay: 
+                                        minutes: !input time_delay_low_speed
+                                    - alias: "Fan low speed OFF - Safe Guard"
+                                      service: homeassistant.turn_off
+                                      entity_id: !input fan_speed_low
+                                    - alias: "Fan off speed"
+                                      service: homeassistant.turn_on
+                                      entity_id: !input fan_speed_off
+                                - alias: "Check if the fan speed off option is enabled"
+                                  conditions:
+                                    -  "{{ include_fan_speed == 'fan_speed_off_enabled' }}"
+                                  sequence:
+                                    - alias: "Fan off speed"
+                                      service: homeassistant.turn_on
+                                      entity_id: !input fan_speed_off
+                          - sequence:
+                              - choose:
+                                - alias: "Check if the lights are enabled"
+                                  conditions:
+                                    - "{{ include_lights == 'lights_enabled' }}"
+                                  sequence:
+                                    - alias: "Wait the number of minutes set in the lights time delay"
+                                      delay:
+                                        minutes: !input light_time_delay
+                                    - choose:
+                                      - alias: "If transition is selected"
+                                        conditions:
+                                          - condition: template
+                                            value_template: "{{ 'use_transition' in include_light_control }}"
+                                        sequence:
+                                          - alias: "Turn off the lights"
+                                            service: light.turn_off
+                                            target:
+                                              entity_id: "{{ light_entities }}"
+                                            data:
+                                              transition: "{{ transition_off_value }}"
+                                      - alias: "If transition is not selected"
+                                        conditions:
+                                          - condition: template
+                                            value_template: "{{ 'use_transition' not in include_light_control }}"
+                                        sequence:
+                                          - alias: "Turn off the lights"
+                                            service: light.turn_off
+                                            target:
+                                              entity_id: "{{ light_entities }}"
+                          - sequence:
+                              - choose:
+                                - alias: "Check if the automation link is enabled"
+                                  conditions:
+                                    -  "{{ include_automation_link == 'enable_automation_link' }}"
+                                  sequence:
+                                    - alias: "Wait the number of minutes set in the automation link time delay"
+                                      delay:
+                                        minutes: !input automation_link_time_delay
+                                    - alias: "Turn off the automation link"
+                                      service: homeassistant.turn_off
+                                      target:
+                                        entity_id: !input automation_link
+                      - stop: "Stop the automation"
+                  - alias: "Check automation and preform the correct action"
+                    conditions:
+                      - alias: "Check if the humidity derivative sensor is above falling humidity set point and fan / lights are on"
+                        condition: numeric_state
+                        entity_id: !input trigger
+                        above: !input rising_humidity
+                      - "{{ (expand(fan_switch.entity_id) | selectattr('state', '==', 'on') | list | count > 0) or ((include_fan_speed == 'fan_low_speed_enabled') and (expand(fan_speed_low) | selectattr('state', '==', 'on') | list | count > 0)) }}"
+                      - "{{ ((include_lights == 'lights_enabled') and (expand(light_switch.entity_id) | selectattr('state', '==', 'on') | list | count > 0)) or (include_lights == 'lights_disabled') }}"
+                      - "{{ ((include_automation_link == 'enable_automation_link') and (expand(automation_link) | selectattr('state', '==', 'on') | list | count > 0)) or (include_automation_link == 'disable_automation_link') }}"
+                    sequence:
+                      - choose:
+                          - alias: "Check if the by-pass auto off is enabled and by-pass is ON"
+                            conditions:
+                              - condition: template
+                                value_template: "{{ (include_bypass_auto_off == 'bypass_auto_off_enabled') and (states[by_pass].state == 'on') }}"
+                            sequence:
+                              - alias: "Wait the number of minutes set in the by-pass auto off time delay"
+                                delay:
+                                  minutes: !input bypass_auto_off_delay
+                              - alias: "Turn off the by-pass"
+                                service: homeassistant.turn_off
+                                entity_id: !input by_pass
+                              - stop: "Stop the automation"
+                      - alias: "Wait until Humidity Derivative Sensor drops or it times out"
+                        wait_for_trigger:
+                          platform: numeric_state
+                          entity_id: !input trigger
+                          below: !input falling_humidity
+                        timeout:
+                          minutes: !input time_out
+                      - alias: "Parallel Actions for the fan and lights"
+                        parallel:
+                          - sequence:
+                              - alias: "Wait the number of minutes that has been set for the time delay"
+                                delay:
+                                  minutes: !input time_delay
+                              - alias: "Turn off the fan"
+                                service: homeassistant.turn_off
+                                target: !input fan_switch
+                              - choose:
+                                - alias: "Check if the fan speed switch to low speed then off option is enabled"
+                                  conditions:
+                                    -  "{{ include_fan_speed == 'fan_low_speed_enabled' }}"
+                                  sequence:
+                                    - alias: "Fan Speed - Switch Off - Safe Guard"
+                                      service: homeassistant.turn_off
+                                      entity_id: !input fan_speed_off
+                                    - alias: "Fan low speed ON"
+                                      service: homeassistant.turn_on
+                                      entity_id: !input fan_speed_low
+                                    - alias: "Wait the number of minutes set in the low speed time delay"
+                                      delay: 
+                                        minutes: !input time_delay_low_speed
+                                    - alias: "Fan low speed OFF - Safe Guard"
+                                      service: homeassistant.turn_off
+                                      entity_id: !input fan_speed_low
+                                    - alias: "Fan off speed"
+                                      service: homeassistant.turn_on
+                                      entity_id: !input fan_speed_off
+                                - alias: "Check if the fan speed off option is enabled"
+                                  conditions:
+                                    -  "{{ include_fan_speed == 'fan_speed_off_enabled' }}"
+                                  sequence:
+                                    - alias: "Fan off speed"
+                                      service: homeassistant.turn_on
+                                      entity_id: !input fan_speed_off
+                          - sequence:
+                              - choose:
+                                - alias: "Check if the lights are enabled"
+                                  conditions:
+                                    - "{{ include_lights == 'lights_enabled' }}"
+                                  sequence:
+                                    - alias: "Wait the number of minutes set in the lights time delay"
+                                      delay:
+                                        minutes: !input light_time_delay
+                                    - choose:
+                                      - alias: "If transition is selected"
+                                        conditions:
+                                          - condition: template
+                                            value_template: "{{ 'use_transition' in include_light_control }}"
+                                        sequence:
+                                          - alias: "Turn off the lights"
+                                            service: light.turn_off
+                                            target:
+                                              entity_id: "{{ light_entities }}"
+                                            data:
+                                              transition: "{{ transition_off_value }}"
+                                      - alias: "If transition is not selected"
+                                        conditions:
+                                          - condition: template
+                                            value_template: "{{ 'use_transition' not in include_light_control }}"
+                                        sequence:
+                                          - alias: "Turn off the lights"
+                                            service: light.turn_off
+                                            target:
+                                              entity_id: "{{ light_entities }}"
+                          - sequence:
+                              - choose:
+                                - alias: "Check if the automation link is enabled"
+                                  conditions:
+                                    -  "{{ include_automation_link == 'enable_automation_link' }}"
+                                  sequence:
+                                    - alias: "Wait the number of minutes set in the automation link time delay"
+                                      delay:
+                                        minutes: !input automation_link_time_delay
+                                    - alias: "Turn off the automation link"
+                                      service: homeassistant.turn_off
+                                      target:
+                                        entity_id: !input automation_link
+                      - stop: "Stop the automation"
+      - choose:
+        - alias: "Check if the run on timer is enabled and switch is on"
+          conditions:
+            - "{{ ('enable_manual_fan_switch' in include_manual_fan_switch) or ('enable_manual_fan_switch_auto_off' in include_manual_fan_switch) }}"
+            - "{{ expand(manual_fan_switch) | selectattr('state', '==', 'on') | list | count > 0 }}"
+          sequence:
+            - alias: "Turn OFF run on timer switch"
+              service: homeassistant.turn_off
+              entity_id: !input manual_fan_switch
+      - choose:
+        - alias: "Check if fan speeds are enabled"
+          conditions:
+            -  "{{ include_fan_speed == 'fan_low_speed_enabled' }}"
+          sequence:
+            - alias: "Fan Speed - Low Speed Switch - Safe Guard"
+              service: homeassistant.turn_off
+              entity_id: !input fan_speed_low
+      - choose:
+        - alias: "Check if fan speeds are enabled"
+          conditions:
+            -  "{{ (include_fan_speed == 'fan_low_speed_enabled') or (include_fan_speed == 'fan_speed_off_enabled')}}"
+          sequence:
+            - alias: "Fan Speed - Switch Off - Safe Guard"
+              service: homeassistant.turn_off
+              entity_id: !input fan_speed_off
+      - alias: "Turn on the fan"
+        service: homeassistant.turn_on
+        target: !input fan_switch
+      - choose:
+          - alias: "Check if the lights are enabled"
+            conditions:
+              - "{{ include_lights == 'lights_enabled' }}"
+            sequence:
+              - choose:
+                - alias: "Set the transition for the normal lights"
+                  conditions:
+                    - condition: template
+                      value_template: "{{ ('use_transition' in include_light_control) and ('use_brightness' not in include_light_control) and ('use_colour_temperature' not in include_light_control) }}"
+                  sequence:
+                    - service: light.turn_on
+                      target:
+                        entity_id: "{{ light_entities }}"
+                      data:
+                        transition:  "{{ transition_on_value }}"
+                - alias: "Set the transition and brightness for the normal lights"
+                  conditions:
+                    - condition: template
+                      value_template: "{{ ('use_transition' in include_light_control) and ('use_brightness' in include_light_control) and ('use_colour_temperature' not in include_light_control) }}"
+                  sequence:
+                    - service: light.turn_on
+                      target:
+                        entity_id: "{{ light_entities }}"
+                      data:
+                        transition:  "{{ transition_on_value }}"
+                        brightness_pct: "{{ brightness_value }}"
+                - alias: "Set the transition and colour temperature for the normal lights"
+                  conditions:
+                    - condition: template
+                      value_template: "{{ ('use_transition' in include_light_control) and ('use_brightness' not in include_light_control) and ('use_colour_temperature' in include_light_control) }}"
+                  sequence:
+                    - service: light.turn_on
+                      target:
+                        entity_id: "{{ light_entities }}"
+                      data:
+                        transition:  "{{ transition_on_value }}"
+                        kelvin: "{{temperature_value}}"
+                - alias: "Set the transition, brightness and colour temperature for the normal lights"
+                  conditions:
+                    - condition: template
+                      value_template: "{{ ('use_transition' in include_light_control) and ('use_brightness' in include_light_control) and ('use_colour_temperature' in include_light_control) }}"
+                  sequence:
+                    - service: light.turn_on
+                      target:
+                        entity_id: "{{ light_entities }}"
+                      data:
+                        transition:  "{{ transition_on_value }}"
+                        brightness_pct: "{{ brightness_value }}"
+                        kelvin: "{{temperature_value}}"
+                - alias: "Set the brightness for the normal lights"
+                  conditions:
+                    - condition: template
+                      value_template: "{{ ('use_transition' not in include_light_control) and ('use_brightness' in include_light_control) and ('use_colour_temperature' not in include_light_control) }}"
+                  sequence:
+                    - service: light.turn_on
+                      target:
+                        entity_id: "{{ light_entities }}"
+                      data:
+                        brightness_pct: "{{ brightness_value }}"
+                - alias: "Set the colour temperature for the normal lights"
+                  conditions:
+                    - condition: template
+                      value_template: "{{ ('use_transition' not in include_light_control) and ('use_brightness' not in include_light_control) and ('use_colour_temperature' in include_light_control) }}"
+                  sequence:
+                    - service: light.turn_on
+                      target:
+                        entity_id: "{{ light_entities }}"
+                      data:
+                        kelvin: "{{temperature_value}}"
+                - alias: "Set the brightness and colour temperature for the normal lights"
+                  conditions:
+                    - condition: template
+                      value_template: "{{ ('use_transition' not in include_light_control) and ('use_brightness' in include_light_control) and ('use_colour_temperature' in include_light_control) }}"
+                  sequence:
+                    - service: light.turn_on
+                      target:
+                        entity_id: "{{ light_entities }}"
+                      data:
+                        brightness_pct: "{{ brightness_value }}"
+                        kelvin: "{{temperature_value}}"
+                - alias: "Set the default for the normal lights"
+                  conditions:
+                    - condition: template
+                      value_template: "{{ ('use_transition' not in include_light_control) and ('use_brightness' not in include_light_control) and ('use_colour_temperature' not in include_light_control) }}"
+                  sequence:
+                    - service: light.turn_on
+                      target:
+                        entity_id: "{{ light_entities }}"
+      - choose:
+        - alias: "Check if the automation link is enabled"
+          conditions:
+            -  "{{ include_automation_link == 'enable_automation_link' }}"
+          sequence:
+            - alias: "Turn on the automation link"
+              service: homeassistant.turn_on
+              target:
+                entity_id: !input automation_link
+      - choose:
+        - alias: "By-pass is enabled & check by-pass option - turn fan on"
+          conditions:
+            - condition: trigger
+              id: 't5'
+            - condition: template
+              value_template: "{{ include_bypass == 'bypass_enabled_turn_on' }}"
+          sequence:
+            - alias: "Check by-pass settings and preform the correct action"
+              if:
+                - alias: "Check if the by-pass auto off is enabled"
+                  condition: template
+                  value_template: "{{ include_bypass_auto_off == 'bypass_auto_off_enabled' }}"
+              then:
+                - alias: "Wait the number of minutes set in the by-pass auto off time delay"
+                  delay: 
+                    minutes: !input bypass_auto_off_delay
+                - alias: "Turn off the by-pass"
+                  service: homeassistant.turn_off
+                  entity_id: !input by_pass
+                - stop: "Stop the automation"
+              else:
+                - stop: "Stop the automation"
+      - alias: "Wait until Humidity Derivative Sensor drops or it times out"
+        wait_for_trigger:
+          platform: numeric_state
+          entity_id: !input trigger
+          below: !input falling_humidity
+        timeout:
+          minutes: !input time_out
+      - alias: "Parallel Actions for the fan and lights"
+        parallel:
+          - sequence:
+              - alias: "Wait the number of minutes that has been set for the time delay"
+                delay:
+                  minutes: !input time_delay
+              - alias: "Turn off the fan"
+                service: homeassistant.turn_off
+                target: !input fan_switch
+              - choose:
+                - alias: "Check if the fan speed switch to low speed then off option is enabled"
+                  conditions:
+                    -  "{{ include_fan_speed == 'fan_low_speed_enabled' }}"
+                  sequence:
+                    - alias: "Fan low speed ON"
+                      service: homeassistant.turn_on
+                      entity_id: !input fan_speed_low
+                    - alias: "Wait the number of minutes set in the low speed time delay"
+                      delay: 
+                        minutes: !input time_delay_low_speed
+                    - alias: "Fan low speed OFF - Safe Guard"
+                      service: homeassistant.turn_off
+                      entity_id: !input fan_speed_low
+                    - alias: "Fan off speed"
+                      service: homeassistant.turn_on
+                      entity_id: !input fan_speed_off
+                - alias: "Check if the fan speed off option is enabled"
+                  conditions:
+                    -  "{{ include_fan_speed == 'fan_speed_off_enabled' }}"
+                  sequence:
+                    - alias: "Fan off speed"
+                      service: homeassistant.turn_on
+                      entity_id: !input fan_speed_off
+          - sequence:
+              - choose:
+                - alias: "Check if the lights are enabled"
+                  conditions:
+                    - "{{ include_lights == 'lights_enabled' }}"
+                  sequence:
+                    - alias: "Wait the number of minutes set in the lights time delay"
+                      delay:
+                        minutes: !input light_time_delay
+                    - choose:
+                      - alias: "If transition is selected"
+                        conditions:
+                          - condition: template
+                            value_template: "{{ 'use_transition' in include_light_control }}"
+                        sequence:
+                          - alias: "Turn off the lights"
+                            service: light.turn_off
+                            target:
+                              entity_id: "{{ light_entities }}"
+                            data:
+                              transition: "{{ transition_off_value }}"
+                      - alias: "If transition is not selected"
+                        conditions:
+                          - condition: template
+                            value_template: "{{ 'use_transition' not in include_light_control }}"
+                        sequence:
+                          - alias: "Turn off the lights"
+                            service: light.turn_off
+                            target:
+                              entity_id: "{{ light_entities }}"
+          - sequence:
+              - choose:
+                - alias: "Check if the automation link is enabled"
+                  conditions:
+                    -  "{{ include_automation_link == 'enable_automation_link' }}"
+                  sequence:
+                    - alias: "Wait the number of minutes set in the automation link time delay"
+                      delay:
+                        minutes: !input automation_link_time_delay
+                    - alias: "Turn off the automation link"
+                      service: homeassistant.turn_off
+                      target:
+                        entity_id: !input automation_link

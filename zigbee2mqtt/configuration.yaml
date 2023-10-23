@@ -91,6 +91,10 @@ devices:
     friendly_name: Koridor_Circl_Led
   '0xa4c138b20582d5f3':
     friendly_name: Koridor_Strip_Led
+  '0x84fd27fffed1dee4':
+    friendly_name: Moika_knopka
+  '0xa4c138fcb901daac':
+    friendly_name: Koridor_little
 permit_join: true
 availability:
   active:

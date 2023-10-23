@@ -2,49 +2,47 @@
   name: ALL_SVET_OFF
   entities:
     switch.koridor_switch_left:
-      action:
-      device_temperature: 30
-      flip_indicator_light: 'ON'
-      last_seen: '2023-08-30T09:25:00.209Z'
-      linkquality: 131
+      friendly_name: Koridor_switch_left
+      device_temperature: 24
+      flip_indicator_light: 'OFF'
+      last_seen: '2023-10-21T11:30:00.427Z'
+      linkquality: 167
       operation_mode_left: decoupled
-      operation_mode_right:
-      power_outage_count: 7
-      power_outage_memory:
+      operation_mode_right: decoupled
+      power_outage_count: 17
+      power_outage_memory: true
       state_left: 'ON'
-      state_right: 'OFF'
+      state_right: 'ON'
       update:
         installed_version: -1
         latest_version: -1
         state: idle
       update_available: false
-      friendly_name: Koridor_switch_left
       state: 'on'
     switch.koridor_switch_right:
-      action:
-      device_temperature: 30
-      flip_indicator_light: 'ON'
-      last_seen: '2023-08-30T09:25:00.209Z'
-      linkquality: 131
+      friendly_name: Koridor_switch_right
+      device_temperature: 24
+      flip_indicator_light: 'OFF'
+      last_seen: '2023-10-21T11:30:00.427Z'
+      linkquality: 167
       operation_mode_left: decoupled
-      operation_mode_right:
-      power_outage_count: 7
-      power_outage_memory:
+      operation_mode_right: decoupled
+      power_outage_count: 17
+      power_outage_memory: true
       state_left: 'ON'
-      state_right: 'OFF'
+      state_right: 'ON'
       update:
         installed_version: -1
         latest_version: -1
         state: idle
       update_available: false
-      friendly_name: Koridor_switch_right
-      state: 'off'
+      state: 'on'
     switch.kuhnya_swich_left:
       action:
-      device_temperature: 30
+      device_temperature: 33
       flip_indicator_light: 'ON'
-      last_seen: '2023-08-30T09:30:48.848Z'
-      linkquality: 178
+      last_seen: '2023-10-21T11:29:24.824Z'
+      linkquality: 127
       operation_mode_left:
       operation_mode_right:
       power_outage_count: 13
@@ -60,10 +58,10 @@
       state: 'off'
     switch.kuhnya_swich_right:
       action:
-      device_temperature: 30
+      device_temperature: 33
       flip_indicator_light: 'ON'
-      last_seen: '2023-08-30T09:30:48.848Z'
-      linkquality: 178
+      last_seen: '2023-10-21T11:29:24.824Z'
+      linkquality: 127
       operation_mode_left:
       operation_mode_right:
       power_outage_count: 13
@@ -79,10 +77,10 @@
       state: 'off'
     switch.masteskaya_switch_left:
       action:
-      device_temperature: 29
+      device_temperature: 32
       flip_indicator_light: 'ON'
-      last_seen: '2023-08-30T09:27:43.141Z'
-      linkquality: 127
+      last_seen: '2023-10-21T11:29:24.838Z'
+      linkquality: 145
       operation_mode_left:
       operation_mode_right:
       power_outage_count: 7
@@ -98,10 +96,10 @@
       state: 'off'
     switch.masteskaya_switch_right:
       action:
-      device_temperature: 29
+      device_temperature: 32
       flip_indicator_light: 'ON'
-      last_seen: '2023-08-30T09:27:43.141Z'
-      linkquality: 127
+      last_seen: '2023-10-21T11:29:24.838Z'
+      linkquality: 145
       operation_mode_left:
       operation_mode_right:
       power_outage_count: 7
@@ -117,10 +115,10 @@
       state: 'off'
     switch.spalnya_switch_left:
       action:
-      device_temperature: 29
+      device_temperature: 25
       flip_indicator_light: 'ON'
-      last_seen: '2023-08-30T09:31:11.385Z'
-      linkquality: 109
+      last_seen: '2023-10-21T11:26:33.087Z'
+      linkquality: 127
       operation_mode_left:
       operation_mode_right:
       power_outage_count: 9
@@ -136,10 +134,10 @@
       state: 'off'
     switch.spalnya_switch_right:
       action:
-      device_temperature: 29
+      device_temperature: 25
       flip_indicator_light: 'ON'
-      last_seen: '2023-08-30T09:31:11.385Z'
-      linkquality: 109
+      last_seen: '2023-10-21T11:26:33.087Z'
+      linkquality: 127
       operation_mode_left:
       operation_mode_right:
       power_outage_count: 9
@@ -155,10 +153,10 @@
       state: 'off'
     switch.toilet_switch:
       action:
-      device_temperature: 31
+      device_temperature: 30
       flip_indicator_light: 'ON'
-      last_seen: '2023-08-30T09:30:48.900Z'
-      linkquality: 171
+      last_seen: '2023-10-21T11:29:14.571Z'
+      linkquality: 131
       operation_mode:
       power_outage_count: 12
       power_outage_memory:
@@ -171,10 +169,10 @@
       state: 'off'
     switch.vanna_switch_left:
       action:
-      device_temperature: 29
+      device_temperature: 26
       flip_indicator_light: 'ON'
-      last_seen: '2023-08-30T09:31:07.927Z'
-      linkquality: 153
+      last_seen: '2023-10-21T11:23:47.751Z'
+      linkquality: 142
       operation_mode_left: control_relay
       operation_mode_right: decoupled
       power_outage_count: 10
@@ -190,10 +188,10 @@
       state: 'off'
     switch.vanna_switch_right:
       action:
-      device_temperature: 29
+      device_temperature: 26
       flip_indicator_light: 'ON'
-      last_seen: '2023-08-30T09:31:07.927Z'
-      linkquality: 153
+      last_seen: '2023-10-21T11:23:47.751Z'
+      linkquality: 142
       operation_mode_left: control_relay
       operation_mode_right: decoupled
       power_outage_count: 10
@@ -209,10 +207,10 @@
       state: 'off'
     switch.balkon_switch:
       action:
-      device_temperature: 30
+      device_temperature: 29
       flip_indicator_light: 'ON'
-      last_seen: '2023-08-30T09:28:54.186Z'
-      linkquality: 83
+      last_seen: '2023-10-21T11:27:55.182Z'
+      linkquality: 98
       operation_mode:
       power_outage_count: 15
       power_outage_memory:
@@ -233,11 +231,11 @@
       - Stop
       supported_color_modes:
       - color_temp
+      friendly_name: Lamp_Gostinnaya
+      supported_features: 44
       flowing: false
       music_mode: false
       night_light: false
-      friendly_name: Lamp_Gostinnaya
-      supported_features: 44
       state: 'off'
     light.lamp_gostinnaya_ambilight:
       min_color_temp_kelvin: 1700
@@ -275,44 +273,55 @@
       - color_temp
       - hs
       - rgb
+      friendly_name: Lamp_Gostinnaya Ambilight
+      supported_features: 44
       flowing: false
       music_mode: false
       night_light: false
-      friendly_name: Lamp_Gostinnaya Ambilight
-      supported_features: 44
       state: 'off'
     switch.kuhnya_led:
       current: 0
-      energy: 0.34
-      last_seen: '2023-08-30T09:30:29.395Z'
-      linkquality: 21
+      energy: 0.51
+      last_seen: '2023-10-21T11:29:27.544Z'
+      linkquality: 25
       power: 0
       power_outage_memory: restore
       switch_type: toggle
-      voltage: 226
+      voltage: 221
       friendly_name: Kuhnya_Led
       state: 'off'
     switch.koridor_strip_led:
+      friendly_name: Koridor_Strip_Led
       current: 0
-      energy: 0.03
-      last_seen: '2023-08-30T09:31:19.423Z'
-      linkquality: 94
+      energy: 0.49
+      last_seen: '2023-10-21T11:29:51.339Z'
+      linkquality: 61
       power: 0
       power_outage_memory: restore
       switch_type: toggle
-      voltage: 226
-      friendly_name: Koridor_Strip_Led
+      voltage: 221
       state: 'off'
     switch.koridor_circl_led:
+      friendly_name: Koridor_Circl_Led
       current: 0
-      energy: 0
-      last_seen: '2023-08-30T09:31:28.439Z'
-      linkquality: 105
+      energy: 0.13
+      last_seen: '2023-10-21T11:30:11.725Z'
+      linkquality: 112
       power: 0
       power_outage_memory: restore
       switch_type: toggle
-      voltage: 226
-      friendly_name: Koridor_Circl_Led
+      voltage: 221
+      state: 'off'
+    switch.koridor_little:
+      friendly_name: Koridor_little
+      current: 0
+      energy: 0
+      last_seen: '2023-10-21T11:30:02.951Z'
+      linkquality: 120
+      power: 0
+      power_outage_memory: restore
+      switch_type: toggle
+      voltage: 221
       state: 'off'
   metadata: {}
 - id: '1668033998939'

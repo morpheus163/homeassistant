@@ -218,8 +218,8 @@
   condition: []
   action:
   - type: turn_on
-    device_id: f4b00bb626fba820fabee4be45843b4a
-    entity_id: switch.koridor_switch_right
+    device_id: 9157d3f2cd5af6c38db14271d55f5267
+    entity_id: switch.koridor_little
     domain: switch
   mode: single
 - id: '1670350524903'
@@ -234,8 +234,8 @@
   condition: []
   action:
   - type: turn_off
-    device_id: f4b00bb626fba820fabee4be45843b4a
-    entity_id: switch.koridor_switch_right
+    device_id: 9157d3f2cd5af6c38db14271d55f5267
+    entity_id: switch.koridor_little
     domain: switch
   mode: single
 - id: '1671274367595'
@@ -683,12 +683,12 @@
   trigger:
   - platform: device
     type: turned_on
-    device_id: f4b00bb626fba820fabee4be45843b4a
-    entity_id: switch.koridor_switch_left
+    device_id: 1b748c1698b3ece8dbb91b0f1454ac2a
+    entity_id: switch.koridor_strip_led
     domain: switch
     for:
       hours: 0
-      minutes: 2
+      minutes: 5
       seconds: 0
   condition:
   - condition: and
@@ -700,8 +700,8 @@
       domain: binary_sensor
   action:
   - type: turn_off
-    device_id: f4b00bb626fba820fabee4be45843b4a
-    entity_id: switch.koridor_switch_left
+    device_id: 1b748c1698b3ece8dbb91b0f1454ac2a
+    entity_id: switch.koridor_strip_led
     domain: switch
   mode: single
 - id: '1680782513147'
@@ -1101,88 +1101,69 @@
     domain: binary_sensor
   condition: []
   action:
-  - type: turn_on
-    device_id: 2f4917a2822fb3a0b3d8170199e47521
-    entity_id: switch.kuhnya_swich_left
-    domain: switch
-  - type: turn_on
-    device_id: 2f4917a2822fb3a0b3d8170199e47521
-    entity_id: switch.kuhnya_swich_right
-    domain: switch
-  - device_id: 3b6bf490c5da17beb3c62aff76989fce
-    domain: light
-    entity_id: light.lamp_gostinnaya
-    type: flash
-  - type: turn_on
-    device_id: 72e41cca5aefff7b64ced588406845ae
-    entity_id: switch.spalnya_switch_left
-    domain: switch
-  - type: turn_on
-    device_id: 72e41cca5aefff7b64ced588406845ae
-    entity_id: switch.spalnya_switch_right
-    domain: switch
-  - device_id: dfa18a5df422eb3cc5018e021edace49
-    domain: light
-    entity_id: light.lamp_lena
-    type: flash
-  - device_id: a6c9dfdd0352116a18707c27a9ad09f4
-    domain: light
-    entity_id: light.lamp_moika
-    type: flash
-  - device_id: 777c456394fb05439aadab5a17875717
-    domain: light
-    entity_id: light.lamp_boris
-    type: flash
-  - device_id: fb0e2576d8f75c35dffb7c5651fcc481
-    domain: light
-    entity_id: light.lamp_obed
-    type: flash
-  - delay:
-      hours: 0
-      minutes: 0
-      seconds: 1
-      milliseconds: 0
-  - type: turn_off
-    device_id: 2f4917a2822fb3a0b3d8170199e47521
-    entity_id: switch.kuhnya_swich_left
-    domain: switch
-  - type: turn_off
-    device_id: 2f4917a2822fb3a0b3d8170199e47521
-    entity_id: switch.kuhnya_swich_right
-    domain: switch
-  - device_id: 3b6bf490c5da17beb3c62aff76989fce
-    domain: light
-    entity_id: light.lamp_gostinnaya
-    type: flash
-  - type: turn_off
-    device_id: 72e41cca5aefff7b64ced588406845ae
-    entity_id: switch.spalnya_switch_left
-    domain: switch
-  - type: turn_off
-    device_id: 72e41cca5aefff7b64ced588406845ae
-    entity_id: switch.spalnya_switch_right
-    domain: switch
-  - device_id: dfa18a5df422eb3cc5018e021edace49
-    domain: light
-    entity_id: light.lamp_lena
-    type: flash
-  - device_id: a6c9dfdd0352116a18707c27a9ad09f4
-    domain: light
-    entity_id: light.lamp_moika
-    type: flash
-  - device_id: 777c456394fb05439aadab5a17875717
-    domain: light
-    entity_id: light.lamp_boris
-    type: flash
-  - device_id: fb0e2576d8f75c35dffb7c5651fcc481
-    domain: light
-    entity_id: light.lamp_obed
-    type: flash
-  - delay:
-      hours: 0
-      minutes: 0
-      seconds: 1
-      milliseconds: 0
+  - device_id: 9e25aec9698c2ec77fe126216c40f115
+    domain: mobile_app
+    type: notify
+    message: Обнаружено затопление! Перекрой воду!
+    title: Обнаружено затопление! Перекрой воду!
+  - repeat:
+      count: '10'
+      sequence:
+      - type: turn_on
+        device_id: 2f4917a2822fb3a0b3d8170199e47521
+        entity_id: switch.kuhnya_swich_left
+        domain: switch
+      - type: turn_on
+        device_id: 2f4917a2822fb3a0b3d8170199e47521
+        entity_id: switch.kuhnya_swich_right
+        domain: switch
+      - type: turn_on
+        device_id: 3b6bf490c5da17beb3c62aff76989fce
+        entity_id: light.lamp_gostinnaya
+        domain: light
+      - type: turn_on
+        device_id: 72e41cca5aefff7b64ced588406845ae
+        entity_id: switch.spalnya_switch_left
+        domain: switch
+      - type: turn_on
+        device_id: 72e41cca5aefff7b64ced588406845ae
+        entity_id: switch.spalnya_switch_right
+        domain: switch
+      - delay:
+          hours: 0
+          minutes: 0
+          seconds: 3
+          milliseconds: 0
+      - type: turn_off
+        device_id: 2f4917a2822fb3a0b3d8170199e47521
+        entity_id: switch.kuhnya_swich_left
+        domain: switch
+      - type: turn_off
+        device_id: 2f4917a2822fb3a0b3d8170199e47521
+        entity_id: switch.kuhnya_swich_right
+        domain: switch
+      - type: turn_off
+        device_id: 3b6bf490c5da17beb3c62aff76989fce
+        entity_id: light.lamp_gostinnaya
+        domain: light
+      - type: turn_off
+        device_id: 72e41cca5aefff7b64ced588406845ae
+        entity_id: switch.spalnya_switch_left
+        domain: switch
+      - type: turn_off
+        device_id: 72e41cca5aefff7b64ced588406845ae
+        entity_id: switch.spalnya_switch_right
+        domain: switch
+      - delay:
+          hours: 0
+          minutes: 0
+          seconds: 3
+          milliseconds: 0
+  - device_id: 0e64ba2a5affe3aaa97bce40fef8c5fd
+    domain: mobile_app
+    type: notify
+    message: Обнаружено затопление! Перекрой воду!
+    title: Обнаружено затопление! Перекрой воду!
   mode: restart
 - id: '1692882192888'
   alias: Koridor_krug
@@ -1235,5 +1216,193 @@
   - type: turn_off
     device_id: 47b2ad653559b6244d84be58e7aee821
     entity_id: switch.vanna_switch_left
+    domain: switch
+  mode: single
+- id: '1696701288476'
+  alias: Low battery reminder
+  description: ''
+  use_blueprint:
+    path: homeassistant/low-battery-level-detection-notification-for-all-battery-sensors.yaml
+    input:
+      actions:
+      - device_id: 9e25aec9698c2ec77fe126216c40f115
+        domain: mobile_app
+        type: notify
+        message: 'Low battery {{sensors}} '
+        title: Low battery
+      exclude:
+        entity_id:
+        - sensor.ijai_v18_73a9_battery_level
+        - sensor.mi_8_se_battery_level
+        - sensor.m2012k11ac_battery_level
+- id: '1697197181976'
+  alias: Moika_knopka_1
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: f7582f2f05eeee80398e9632726fd24c
+    type: action
+    subtype: 1_single
+    discovery_id: 0x84fd27fffed1dee4 action_1_single
+  condition: []
+  action:
+  - type: toggle
+    device_id: 2f4917a2822fb3a0b3d8170199e47521
+    entity_id: switch.kuhnya_swich_left
+    domain: switch
+  mode: single
+- id: '1697197230545'
+  alias: Kuhnya_knopka_2
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: f7582f2f05eeee80398e9632726fd24c
+    type: action
+    subtype: 2_single
+    discovery_id: 0x84fd27fffed1dee4 action_2_single
+  condition: []
+  action:
+  - type: toggle
+    device_id: 2f4917a2822fb3a0b3d8170199e47521
+    entity_id: switch.kuhnya_swich_right
+    domain: switch
+  mode: single
+- id: '1697198618584'
+  alias: Kuhnya_knopka_3
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: f7582f2f05eeee80398e9632726fd24c
+    type: action
+    subtype: 3_single
+    discovery_id: 0x84fd27fffed1dee4 action_3_single
+  condition: []
+  action:
+  - type: toggle
+    device_id: 68481e990d39c9484dc943307cb484b3
+    entity_id: switch.kuhnya_led
+    domain: switch
+  mode: single
+- id: '1697314201732'
+  alias: Brizer_heater_on_20C
+  description: ''
+  trigger:
+  - type: temperature
+    platform: device
+    device_id: 2a0f3c6f2e3c8918e803ff70bed7ffcf
+    entity_id: sensor.spalnya_temp_temperature
+    domain: sensor
+    below: 20.5
+    for:
+      hours: 0
+      minutes: 3
+      seconds: 0
+  condition:
+  - condition: and
+    conditions:
+    - condition: state
+      entity_id: fan.zhimi_va4_b644_air_fresh
+      for:
+        hours: 0
+        minutes: 10
+        seconds: 0
+      attribute: preset_mode
+      state: High
+  action:
+  - type: turn_off
+    device_id: be43d81d1fc45b4f4e6d048980f6599a
+    entity_id: switch.zhimi_va4_b644_alarm
+    domain: switch
+  - type: turn_on
+    device_id: be43d81d1fc45b4f4e6d048980f6599a
+    entity_id: switch.zhimi_va4_b644_heater
+    domain: switch
+  mode: single
+- id: '1697314609850'
+  alias: Brizer_heater_off_21
+  description: ''
+  trigger:
+  - type: temperature
+    platform: device
+    device_id: 2a0f3c6f2e3c8918e803ff70bed7ffcf
+    entity_id: sensor.spalnya_temp_temperature
+    domain: sensor
+    for:
+      hours: 0
+      minutes: 10
+      seconds: 0
+    above: 21
+  condition:
+  - condition: and
+    conditions:
+    - condition: state
+      entity_id: fan.zhimi_va4_b644_air_fresh
+      for:
+        hours: 0
+        minutes: 10
+        seconds: 0
+      attribute: preset_mode
+      state: High
+  action:
+  - type: turn_off
+    device_id: be43d81d1fc45b4f4e6d048980f6599a
+    entity_id: switch.zhimi_va4_b644_heater
+    domain: switch
+  mode: single
+- id: '1697730863530'
+  alias: Brizer_heater_off_21,5_15_miutes
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - fan.zhimi_va4_b644_air_fresh
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+    to: 'on'
+  - platform: state
+    entity_id:
+    - switch.zhimi_va4_b644_heater
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+    to: 'on'
+  condition:
+  - condition: and
+    conditions:
+    - condition: state
+      entity_id: sensor.spalnya_temp_temperature
+      attribute: temperature
+      state: '>21,5'
+      for:
+        hours: 0
+        minutes: 10
+        seconds: 0
+  action:
+  - type: turn_off
+    device_id: be43d81d1fc45b4f4e6d048980f6599a
+    entity_id: switch.zhimi_va4_b644_heater
+    domain: switch
+  mode: single
+- id: '1697887723506'
+  alias: Koridor_little
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: f4b00bb626fba820fabee4be45843b4a
+    type: action
+    subtype: single_right
+    discovery_id: 0x54ef441000401a59 action_single_right
+  condition: []
+  action:
+  - type: toggle
+    device_id: 9157d3f2cd5af6c38db14271d55f5267
+    entity_id: switch.koridor_little
     domain: switch
   mode: single
