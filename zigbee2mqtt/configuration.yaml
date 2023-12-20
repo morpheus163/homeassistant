@@ -95,6 +95,11 @@ devices:
     friendly_name: Moika_knopka
   '0xa4c138fcb901daac':
     friendly_name: Koridor_little
+  '0xa4c13844e12b0eab':
+    friendly_name: Toilet_door
+  '0xa4c1382def92adfd':
+    friendly_name: Kuhnya_temp
+    humidity_calibration: ''
 permit_join: true
 availability:
   active:

@@ -181,10 +181,6 @@
     device_id: 47ab01fd55583d23dcb765b80686870b
     entity_id: switch.toilet_switch
     domain: switch
-  - type: turn_on
-    device_id: ee2aa9b1f63ee99ed0b009387a62afda
-    entity_id: light.lamp_toilet_2
-    domain: light
   mode: single
 - id: '1670343246594'
   alias: Toilet_Svet_Off
@@ -197,9 +193,19 @@
     domain: binary_sensor
     for:
       hours: 0
-      minutes: 2
+      minutes: 3
       seconds: 0
-  condition: []
+  condition:
+  - condition: and
+    conditions:
+    - condition: state
+      entity_id: switch.toilet_switch
+      state: 'on'
+    - type: is_open
+      condition: device
+      device_id: 7f2f00e9f90758ff1b2a472c55596c78
+      entity_id: binary_sensor.toilet_door_contact
+      domain: binary_sensor
   action:
   - type: turn_off
     device_id: 47ab01fd55583d23dcb765b80686870b
@@ -1295,10 +1301,10 @@
     device_id: 2a0f3c6f2e3c8918e803ff70bed7ffcf
     entity_id: sensor.spalnya_temp_temperature
     domain: sensor
-    below: 20.5
+    below: 20
     for:
       hours: 0
-      minutes: 3
+      minutes: 5
       seconds: 0
   condition:
   - condition: and
@@ -1332,7 +1338,7 @@
     domain: sensor
     for:
       hours: 0
-      minutes: 10
+      minutes: 5
       seconds: 0
     above: 21
   condition:
@@ -1405,4 +1411,226 @@
     device_id: 9157d3f2cd5af6c38db14271d55f5267
     entity_id: switch.koridor_little
     domain: switch
+  mode: single
+- id: '1698267658131'
+  alias: Battery_Spalnya_on_21c
+  description: ''
+  trigger:
+  - type: temperature
+    platform: device
+    device_id: 2a0f3c6f2e3c8918e803ff70bed7ffcf
+    entity_id: sensor.spalnya_temp_temperature
+    domain: sensor
+    below: 21
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 0
+  condition: []
+  action:
+  - service: climate.set_temperature
+    data:
+      temperature: 26
+    target:
+      entity_id: climate.spalnya_battery
+  mode: single
+- id: '1698267918801'
+  alias: Battery_spalnya_off_21c
+  description: ''
+  trigger:
+  - type: temperature
+    platform: device
+    device_id: 2a0f3c6f2e3c8918e803ff70bed7ffcf
+    entity_id: sensor.spalnya_temp_temperature
+    domain: sensor
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+    above: 21.5
+  condition: []
+  action:
+  - service: climate.set_temperature
+    data:
+      temperature: 19
+    target:
+      entity_id: climate.spalnya_battery
+  mode: single
+- id: '1698401153062'
+  alias: Battery_spalnya_night_22_workdays
+  description: ''
+  trigger:
+  - type: temperature
+    platform: device
+    device_id: 2a0f3c6f2e3c8918e803ff70bed7ffcf
+    entity_id: sensor.spalnya_temp_temperature
+    domain: sensor
+    below: 25
+    above: 21
+  condition:
+  - condition: time
+    after: '21:00:00'
+    before: '10:00:00'
+    weekday:
+    - mon
+    - tue
+    - wed
+    - thu
+    - fri
+  action:
+  - service: climate.set_temperature
+    data:
+      temperature: 22
+    target:
+      entity_id: climate.gost_battery
+  mode: single
+- id: '1699298018100'
+  alias: WakeUp_Workdays
+  description: ''
+  trigger:
+  - platform: time
+    at: sensor.m2012k11ac_next_alarm
+  - platform: time
+    at: '11:00:00'
+  condition:
+  - condition: time
+    weekday:
+    - mon
+    - tue
+    - wed
+    - thu
+    - fri
+  action:
+  - device_id: ab010a320bca09b3f1b95193aa39c892
+    domain: cover
+    entity_id: cover.spalnya_shtory
+    type: open
+  - type: turn_off
+    device_id: be43d81d1fc45b4f4e6d048980f6599a
+    entity_id: fan.zhimi_va4_b644_air_fresh
+    domain: fan
+  mode: single
+- id: '1699298051210'
+  alias: WakeUp_Weekend
+  description: ''
+  trigger:
+  - platform: time
+    at: sensor.m2012k11ac_next_alarm
+  - platform: time
+    at: '12:00:00'
+  condition:
+  - condition: time
+    weekday:
+    - sat
+    - sun
+  action:
+  - device_id: ab010a320bca09b3f1b95193aa39c892
+    domain: cover
+    entity_id: cover.spalnya_shtory
+    type: open
+  - type: turn_off
+    device_id: be43d81d1fc45b4f4e6d048980f6599a
+    entity_id: fan.zhimi_va4_b644_air_fresh
+    domain: fan
+  mode: single
+- id: '1699978407177'
+  alias: Toilet_OFF_10min
+  description: ''
+  trigger:
+  - type: no_motion
+    platform: device
+    device_id: 6ba461553d8f54ff920546808bcd3b83
+    entity_id: binary_sensor.toilet_dv_occupancy
+    domain: binary_sensor
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 0
+  condition:
+  - condition: and
+    conditions:
+    - condition: device
+      type: is_on
+      device_id: 47ab01fd55583d23dcb765b80686870b
+      entity_id: switch.toilet_switch
+      domain: switch
+    - type: is_not_open
+      condition: device
+      device_id: 7f2f00e9f90758ff1b2a472c55596c78
+      entity_id: binary_sensor.toilet_door_contact
+      domain: binary_sensor
+  action:
+  - delay:
+      hours: 0
+      minutes: 15
+      seconds: 0
+      milliseconds: 0
+  - type: turn_off
+    device_id: 47ab01fd55583d23dcb765b80686870b
+    entity_id: switch.toilet_switch
+    domain: switch
+  mode: single
+- id: '1702043467131'
+  alias: Brizer_start>heater_off
+  description: ''
+  trigger:
+  - platform: device
+    type: turned_on
+    device_id: be43d81d1fc45b4f4e6d048980f6599a
+    entity_id: fan.zhimi_va4_b644_air_fresh
+    domain: fan
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 50
+  condition: []
+  action:
+  - type: turn_off
+    device_id: be43d81d1fc45b4f4e6d048980f6599a
+    entity_id: switch.zhimi_va4_b644_heater
+    domain: switch
+  mode: single
+- id: '1702044055787'
+  alias: CO2_700>brizer_set_50%
+  description: ''
+  trigger:
+  - type: carbon_dioxide
+    platform: device
+    device_id: be43d81d1fc45b4f4e6d048980f6599a
+    entity_id: sensor.zhimi_va4_b644_co2_density
+    domain: sensor
+    below: 700
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 10
+  condition: []
+  action:
+  - service: fan.set_percentage
+    data:
+      percentage: 50
+    target:
+      entity_id: fan.zhimi_va4_b644_air_fresh
+  mode: single
+- id: '1702044084596'
+  alias: CO2_1000>brizer_100%
+  description: ''
+  trigger:
+  - type: carbon_dioxide
+    platform: device
+    device_id: be43d81d1fc45b4f4e6d048980f6599a
+    entity_id: sensor.zhimi_va4_b644_co2_density
+    domain: sensor
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 10
+    above: 900
+  condition: []
+  action:
+  - service: fan.set_percentage
+    data:
+      percentage: 100
+    target:
+      entity_id: fan.zhimi_va4_b644_air_fresh
   mode: single
